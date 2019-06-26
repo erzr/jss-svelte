@@ -1,0 +1,73 @@
+{
+  "name": "jss-svelte-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "config": {
+    "appName": "jsssvelte",
+    "rootPlaceholders": [
+      "jss-main"
+    ],
+    "sitecoreDistPath": "/dist/jsssvelte",
+    "sitecoreConfigPath": "/App_Config/Include/zzz",
+    "graphQLEndpointPath": "/api/jsssvelte",
+    "language": "en"
+  },
+  "scripts": {
+    "jss": "jss",
+    "start": "npm-run-all --serial bootstrap:disconnected --parallel start:svelte start:proxy start:watch-components",
+    "bootstrap:disconnected": "node scripts/bootstrap.js --disconnected",
+    "start:proxy": "node scripts/disconnected-mode-proxy.js",
+    "start:watch-components": "node scripts/generate-component-factory.js --watch",
+    "start:svelte": "run-p start:dev autobuild",
+    "start:dev": "node server.js",
+    "autobuild": "rollup -c -w",
+    "start:connected": "scjss-verify-setup  && npm-run-all --serial bootstrap:connected start:svelte start:watch-components",
+    "build": "npm-run-all --serial bootstrap:connected build:client build:server",
+    "bootstrap:connected": "node scripts/bootstrap.js",
+    "build:client": "cross-env-shell  \"rollup -c\"",
+    "build:server": "cross-env-shell NODE_ENV=production \"rollup --config server/server.rollup.config.js\"",
+    "scaffold": "node scripts/scaffold-component.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "@sitecore-jss/sitecore-jss-cli": "^11.0.2",
+    "@sitecore-jss/sitecore-jss-dev-tools": "^11.0.2",
+    "@sitecore-jss/sitecore-jss-manifest": "^11.0.2",
+    "axios": "^0.18.0",
+    "babel-loader": "^8.0.6",
+    "cross-env": "^5.2.0",
+    "express-history-api-fallback": "^2.2.1",
+    "http-proxy-middleware": "^0.19.1",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^1.10.1",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-copy": "^2.0.1",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-node-resolve": "^4.2.4",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-svelte": "^5.0.3",
+    "rollup-plugin-terser": "^4.0.4",
+    "svelte": "^3.4.2"
+  },
+  "dependencies": {
+    "@sitecore-jss/sitecore-jss": "^11.0.2",
+    "@sitecore-jss/sitecore-jss-tracking": "^11.0.2",
+    "apollo-boost": "^0.4.2",
+    "apollo-client": "^2.4.0",
+    "apollo-link-batch-http": "^1.2.11",
+    "apollo-link-http": "^1.5.14",
+    "cross-fetch": "^3.0.3",
+    "es6-promise": "^4.2.8",
+    "graphql": "^14.3.1",
+    "jss-svelte": "git+https://github.com/erzr/jss-svelte.git",
+    "node-fetch": "^2.6.0",
+    "serialize-javascript": "^1.7.0",
+    "svelte-apollo": "^0.3.0",
+    "svero": "^0.5.0"
+  }
+}

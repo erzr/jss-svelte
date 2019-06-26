@@ -1,0 +1,22 @@
+<script>
+  import { Link } from "svero";
+</script>
+
+<div
+  class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3
+  bg-white border-bottom">
+  <h5 class="my-0 mr-md-auto font-weight-normal">
+    <a class="text-dark active" aria-current="page" href="/">{'Svelte JSS'}</a>
+  </h5>
+  <nav class="my-2 my-md-0 mr-md-3">
+    <a
+      class="p-2 text-dark"
+      href="https://jss.sitecore.net"
+      target="_blank"
+      rel="noopener noreferrer">
+       {'Documentation'}
+    </a>
+    <Link href="/styleguide" className="p-2 text-dark"> {'Styleguide'} </Link>
+    <Link href="/graphql" className="p-2 text-dark"> {'GraphQL'} </Link>
+  </nav>
+</div>
