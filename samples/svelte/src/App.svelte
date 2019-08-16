@@ -3,7 +3,7 @@
   import { setClient } from "svelte-apollo";
 
   import RouteComponent from "./RouteComponent.svelte";
-  import { getSitecoreContext } from "jss-svelte";
+  import { SitecoreContext } from "jss-svelte";
 
   import componentFactory from "./temp/componentFactory.js";
 
@@ -21,16 +21,18 @@
     "/:lang<[a-z]{2}-[A-Z]{2}>/*sitecoreRoute"
   ]
 
-  const sitecoreContext = getSitecoreContext();
+  const sitecoreContext = new SitecoreContext();
   sitecoreContext.setComponentFactory(componentFactory);
 </script>
 
 {#if routeData}
-  <RouteComponent {path} {routeData} {sitecoreContext} />
+  <RouteComponent path={path} routeData={routeData} sitecoreContext={sitecoreContext} />
 {:else}
   <Router>
     {#each routePatterns as routePattern}
-      <Route path={routePattern} component={RouteComponent} />
+      <Route path={routePattern} let:router>
+        <RouteComponent router={router} sitecoreContext={sitecoreContext} />
+      </Route>
     {/each}
   </Router>
 {/if}

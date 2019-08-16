@@ -1,9 +1,9 @@
 <script>
-  import { Placeholder, getSitecoreContext } from "jss-svelte";
+  import { Placeholder } from "jss-svelte";
 
   export let rendering = null;
+  export let sitecoreContext = null;
 
-  const sitecoreContext = getSitecoreContext();
   const disconnectedMode =
     sitecoreContext.context.itemId === "available-in-connected-mode";
 </script>
@@ -29,6 +29,6 @@
       </p>
     </div>
   {:else}
-    <Placeholder name="jss-graphql-layout" {rendering} />
+    <Placeholder name="jss-graphql-layout" {rendering} {sitecoreContext} />
   {/if}
 </div>

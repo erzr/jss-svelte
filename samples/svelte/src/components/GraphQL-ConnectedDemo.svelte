@@ -1,12 +1,11 @@
 <script>
-  import { Text, Link, getSitecoreContext } from "jss-svelte";
+  import { Text, Link } from "jss-svelte";
   import { gql } from "apollo-boost";
 
   import { getClient, query } from "svelte-apollo";
 
   export let rendering = null;
-
-  const sitecoreContext = getSitecoreContext();
+  export let sitecoreContext = null;
 
   const CONNECTED_QUERY = gql`
     query ConnectedDemoQuery($datasource: String!, $contextItem: String!) {

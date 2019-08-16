@@ -1,14 +1,14 @@
 <script>
   import {
     Text,
-    getFieldValue,
-    getSitecoreContext
+    getFieldValue
   } from "jss-svelte";
   import StyleguideSpecimen from "../StyleguideSpecimen.svelte";
   import StyleguideLayoutTabsTab from "./Styleguide-Layout-Tabs-Tab.svelte";
 
   export let fields = null;
   export let rendering = null;
+  export let sitecoreContext = null;
 
   const specimanProps = {
     fields,
@@ -18,7 +18,6 @@
   let tabs = [];
   let activeTabIndex = 0;
 
-  const sitecoreContext = getSitecoreContext();
   const isEditing = sitecoreContext.context.pageEditing;
   const tabsPlaceholder = rendering.placeholders["jss-tabs"];
 

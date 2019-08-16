@@ -12,6 +12,7 @@
   export let path = null;
   export let routeData = null;
   export let router = {};
+  export let sitecoreContext = null;
 
   async function getRouteData(route, language) {
     const fetchOptions = {
@@ -43,9 +44,9 @@
       return path;
     }
 
-    let sitecorePath = router.params.sitecoreRoute ? router.params.sitecoreRoute : '/';
+    let sitecorePath = router.params && router.params.sitecoreRoute ? router.params.sitecoreRoute : '/';
 
-    if (router.params.splat) {
+    if (router.params && router.params.splat) {
       sitecorePath +=  `/${router.params.splat}`;
     }
 
@@ -63,12 +64,12 @@
 </script>
 
 {#if routeData}
-  <RouteHandler {routeData} />
+  <RouteHandler routeData={routeData} sitecoreContext={sitecoreContext} />
 {:else}
   {#await promise}
     <p>...waiting</p>
   {:then routeData}
-    <RouteHandler {routeData} />
+    <RouteHandler routeData={routeData} sitecoreContext={sitecoreContext} />
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}

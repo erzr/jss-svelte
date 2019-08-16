@@ -1,5 +1,5 @@
 <script>
-  import { getFieldValue, getSitecoreContext } from "jss-svelte";
+  import { getFieldValue } from "jss-svelte";
   import StyleguideSpecimen from "../StyleguideSpecimen.svelte";
   import { trackingApi } from "@sitecore-jss/sitecore-jss-tracking";
   import { dataFetcher } from "../dataFetcher";
@@ -7,6 +7,7 @@
 
   export let fields = null;
   export let rendering = null;
+  export let sitecoreContext = null;
 
   const specimanProps = {
     fields,
@@ -122,7 +123,6 @@
       .then(() => alert("Batch of events pushed"))
       .catch(error => alert(error));
   };
-  const sitecoreContext = getSitecoreContext();
   const disconnectedMode =
     sitecoreContext.context.itemId === "available-in-connected-mode";
 </script>
