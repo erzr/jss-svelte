@@ -13,7 +13,6 @@
   export let path = null;
   export let routeData = null;
   export let router = {};
-  export let sitecoreContext = null;
 
   const sitecoreRoutePatterns = [
     "/:lang([a-z]{2}-[A-Z]{2})/:sitecoreRoute*",
@@ -78,19 +77,13 @@
   const sitecoreLang = sitecoreRouteData.lang;
   const sitecoreRoutePath = sitecoreRouteData.path;
 
-  let promise = routeData
-    ? null
-    : getRouteData(sitecoreRoutePath, sitecoreLang);
+  if (!routeData) {
+    getRouteData(sitecoreRoutePath, sitecoreLang)
+      .then(data => routeData = data);
+  }
+
 </script>
 
 {#if routeData}
-  <RouteHandler {routeData} {sitecoreContext} />
-{:else}
-  {#await promise}
-    <p>...waiting</p>
-  {:then routeData}
-    <RouteHandler {routeData} {sitecoreContext} />
-  {:catch error}
-    <p style="color: red">{error.message}</p>
-  {/await}
+  <RouteHandler routeData={routeData} />
 {/if}

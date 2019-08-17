@@ -1,9 +1,10 @@
 <script>
   import Layout from "./Layout.svelte";
+  import { getSitecoreContext } from "jss-svelte";
 
   export let routeData = null;
-  export let sitecoreContext = null;
 
+  const sitecoreContext = getSitecoreContext();
   const route = routeData.sitecore.route;
   const itemId = routeData.sitecore.route.itemId;
 

@@ -1,14 +1,16 @@
 <script>
   import {
     Text,
-    getFieldValue
+    getFieldValue,
+    getSitecoreContext
   } from "jss-svelte";
   import StyleguideSpecimen from "../StyleguideSpecimen.svelte";
   import StyleguideLayoutTabsTab from "./Styleguide-Layout-Tabs-Tab.svelte";
 
   export let fields = null;
   export let rendering = null;
-  export let sitecoreContext = null;
+  
+  const sitecoreContext = getSitecoreContext();
 
   const specimanProps = {
     fields,

@@ -1,5 +1,5 @@
 <script>
-  import { getFieldValue } from "jss-svelte";
+  import { getFieldValue, getSitecoreContext } from "jss-svelte";
   import StyleguideSpecimen from "../StyleguideSpecimen.svelte";
   import { trackingApi } from "@sitecore-jss/sitecore-jss-tracking";
   import { dataFetcher } from "../dataFetcher";
@@ -7,7 +7,8 @@
 
   export let fields = null;
   export let rendering = null;
-  export let sitecoreContext = null;
+
+  const sitecoreContext = getSitecoreContext();
 
   const specimanProps = {
     fields,
