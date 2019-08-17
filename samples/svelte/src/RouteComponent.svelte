@@ -49,11 +49,11 @@
     if (!sitecorePath) {
       sitecorePath = `/${router.params._}`;
     }
-    
+
     return sitecorePath;
   }
 
-  let sitecoreLang = router.params.lang ? router.params.lang : "en"; 
+  let sitecoreLang = router.params.lang ? router.params.lang : config.defaultLanguage; 
   let sitecoreRoutePath = getSitecorePath();
 
   if (!sitecoreRoutePath.startsWith("/")) {
