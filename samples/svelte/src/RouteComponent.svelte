@@ -44,16 +44,16 @@
       return path;
     }
 
-    let sitecorePath = router.params && router.params.sitecoreRoute ? router.params.sitecoreRoute : '/';
+    let sitecorePath = router.path;
 
-    if (router.params && router.params.splat) {
-      sitecorePath +=  `/${router.params.splat}`;
+    if (!sitecorePath) {
+      sitecorePath = `/${router.params._}`;
     }
-
+    
     return sitecorePath;
   }
 
-  let sitecoreLang = router.params && router.params.lang ? router.params.lang : "en"; 
+  let sitecoreLang = router.params.lang ? router.params.lang : "en"; 
   let sitecoreRoutePath = getSitecorePath();
 
   if (!sitecoreRoutePath.startsWith("/")) {

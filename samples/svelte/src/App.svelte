@@ -14,11 +14,8 @@
   setClient(graphQLClient);
 
   export const routePatterns = [
-    "/",
-    "/:sitecoreRoute",
-    "/:sitecoreRoute/*splat",
-    "/:lang<[a-z]{2}>/*sitecoreRoute",
-    "/:lang<[a-z]{2}-[A-Z]{2}>/*sitecoreRoute"
+    {pattern: "*"},
+    {pattern: "/", exact: true}
   ]
 
   const sitecoreContext = new SitecoreContext();
@@ -30,7 +27,7 @@
 {:else}
   <Router>
     {#each routePatterns as routePattern}
-      <Route path={routePattern} let:router>
+      <Route path={routePattern.pattern} exact nofallback let:router>
         <RouteComponent router={router} sitecoreContext={sitecoreContext} />
       </Route>
     {/each}
