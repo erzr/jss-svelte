@@ -5,6 +5,7 @@
     isExperienceEditorActive,
     dataApi
   } from "@sitecore-jss/sitecore-jss";
+  import pathToRegexp from "path-to-regexp";
 
   import config from "./temp/config";
   import RouteHandler from "./RouteHandler.svelte";
@@ -13,6 +14,12 @@
   export let routeData = null;
   export let router = {};
   export let sitecoreContext = null;
+
+  const sitecoreRoutePatterns = [
+    "/:lang([a-z]{2}-[A-Z]{2})/:sitecoreRoute*",
+    "/:lang([a-z]{2})/:sitecoreRoute*",
+    "/:sitecoreRoute*"
+  ];
 
   async function getRouteData(route, language) {
     const fetchOptions = {
@@ -39,37 +46,50 @@
     });
   }
 
-  function getSitecorePath() {
+  function getSitecorePathData() {
     if (path) {
       return path;
     }
 
     let sitecorePath = router.path;
+    let sitecoreLang = config.defaultLanguage;
 
     if (!sitecorePath) {
       sitecorePath = `/${router.params._}`;
     }
 
-    return sitecorePath;
+    sitecoreRoutePatterns.forEach((sitecoreRoute) => {
+      const regexpRoute = pathToRegexp(sitecoreRoute);
+      const testResponse = regexpRoute.exec(sitecorePath);
+      
+      if (testResponse && testResponse.length === 3) {
+        sitecoreLang = testResponse[1];
+        sitecorePath = `/${testResponse[2]}`;
+      }
+    })
+
+    return {
+      path: sitecorePath,
+      lang: sitecoreLang
+    };
   }
 
-  let sitecoreLang = router.params.lang ? router.params.lang : config.defaultLanguage; 
-  let sitecoreRoutePath = getSitecorePath();
+  const sitecoreRouteData = getSitecorePathData();
+  const sitecoreLang = sitecoreRouteData.lang;
+  const sitecoreRoutePath = sitecoreRouteData.path;
 
-  if (!sitecoreRoutePath.startsWith("/")) {
-    sitecoreRoutePath = `/${sitecoreRoutePath}`;
-  }
-
-  let promise = routeData ? null : getRouteData(sitecoreRoutePath, sitecoreLang);
+  let promise = routeData
+    ? null
+    : getRouteData(sitecoreRoutePath, sitecoreLang);
 </script>
 
 {#if routeData}
-  <RouteHandler routeData={routeData} sitecoreContext={sitecoreContext} />
+  <RouteHandler {routeData} {sitecoreContext} />
 {:else}
   {#await promise}
     <p>...waiting</p>
   {:then routeData}
-    <RouteHandler routeData={routeData} sitecoreContext={sitecoreContext} />
+    <RouteHandler {routeData} {sitecoreContext} />
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}

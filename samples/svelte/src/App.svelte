@@ -27,7 +27,7 @@
 {:else}
   <Router>
     {#each routePatterns as routePattern}
-      <Route path={routePattern.pattern} exact nofallback let:router>
+      <Route path={routePattern.pattern} exact={routePattern.exact} nofallback let:router>
         <RouteComponent router={router} sitecoreContext={sitecoreContext} />
       </Route>
     {/each}
