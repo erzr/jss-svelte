@@ -44,7 +44,7 @@
   <div class="p-3 border-left border-right border-bottom">
     {#each tabs as tab, index}
       {#if activeTabIndex == index || isEditing}
-        <StyleguideLayoutTabsTab fields={tab.fields} {sitecoreContext} />
+        <StyleguideLayoutTabsTab fields={tab.fields} sitecoreContext={sitecoreContext} />
       {/if}
     {/each}
   </div>

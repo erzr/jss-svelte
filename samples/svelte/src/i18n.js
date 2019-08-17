@@ -43,7 +43,9 @@ export default function i18nInit(language, dictionary) {
 
       fetch(dictionaryServicePath)
         .then(response => response.json())
-        .then(json => resolve(json));
+        .then(json => {
+          resolve(json);
+        });
     }
   });
 }
