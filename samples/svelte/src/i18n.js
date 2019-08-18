@@ -10,7 +10,7 @@ export default function i18nInit(language, dictionary) {
       })
     } else {
       // eslint-disable-next-line prettier/prettier
-      const dictionaryServicePath = `${config.sitecoreApiHost}/sitecore/api/jss/dictionary/${config.jssAppName}/${config.defaultLanguage}?sc_apikey=${config.sitecoreApiKey}`;
+      const dictionaryServicePath = `${config.sitecoreApiHost}/sitecore/api/jss/dictionary/${config.jssAppName}/${language}?sc_apikey=${config.sitecoreApiKey}`;
 
       fetch(dictionaryServicePath)
         .then(response => response.json())

@@ -1,9 +1,13 @@
 <script>
-  import { Link } from "svero";
+  import { Link } from "svelte-routing";
   import { getInternationalizationContext } from 'jss-svelte';
 
   const ctx = getInternationalizationContext();
   const t = ctx.getTranslator();
+
+  const buildNavItemProps = () => {
+    return {class: 'p-2 text-dark'};
+  }
 </script>
 
 <div
@@ -20,7 +24,7 @@
       rel="noopener noreferrer">
        {t('Documentation')}
     </a>
-    <Link href="/styleguide" className="p-2 text-dark"> {t('Styleguide')} </Link>
-    <Link href="/graphql" className="p-2 text-dark"> {t('GraphQL')} </Link>
+    <Link to="/styleguide" getProps={buildNavItemProps} class="p-2 text-dark"> {t('Styleguide')} </Link>
+    <Link to="/graphql" getProps={buildNavItemProps}> {t('GraphQL')} </Link>
   </nav>
 </div>

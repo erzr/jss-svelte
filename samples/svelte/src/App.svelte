@@ -1,10 +1,11 @@
 <script>
-  import { Router, Link, Route } from "svero";
+  import { Router, Link, Route } from "svelte-routing";
   import { setClient } from "svelte-apollo";
+  import pathToRegexp from "path-to-regexp";
 
   import RouteComponent from "./RouteComponent.svelte";
   import { setSitecoreContext, SitecoreContext } from "jss-svelte";
-    import {
+  import {
     InternationalizationContext,
     setInternationalizationContext
   } from "jss-svelte";
@@ -19,12 +20,16 @@
   setClient(graphQLClient);
 
   export const routePatterns = [
-    { pattern: "*" },
-    { pattern: "/", exact: true }
+    "/:lang/:sitecoreRoute*",
+    "/:lang/:sitecoreRoute*",
+    "/:sitecoreRoute*",
+    "/"
   ];
 
-  const context = new InternationalizationContext(dictionary);
-  setInternationalizationContext(context);
+  if (dictionary) {
+    const context = new InternationalizationContext(dictionary);
+    setInternationalizationContext(context);
+  }
 
   const sitecoreContext = new SitecoreContext();
   sitecoreContext.setComponentFactory(componentFactory);
@@ -36,12 +41,8 @@
 {:else}
   <Router>
     {#each routePatterns as routePattern}
-      <Route
-        path={routePattern.pattern}
-        exact={routePattern.exact}
-        nofallback
-        let:router>
-        <RouteComponent {router} />
+      <Route path={routePattern} let:params>
+        <RouteComponent params={params} />
       </Route>
     {/each}
   </Router>

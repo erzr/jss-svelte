@@ -5,19 +5,26 @@
     isExperienceEditorActive,
     dataApi
   } from "@sitecore-jss/sitecore-jss";
-  import pathToRegexp from "path-to-regexp";
+  import {
+    InternationalizationContext,
+    getInternationalizationContext,
+    setInternationalizationContext
+  } from "jss-svelte";
 
   import config from "./temp/config";
+  import i18nInit from "./i18n";
   import RouteHandler from "./RouteHandler.svelte";
+  import Dictionary from "./Dictionary.svelte";
 
   export let path = null;
   export let routeData = null;
   export let router = {};
+  export let params = null;
+  export let dictionary = null;
 
-  const sitecoreRoutePatterns = [
-    "/:lang([a-z]{2}-[A-Z]{2})/:sitecoreRoute*",
-    "/:lang([a-z]{2})/:sitecoreRoute*",
-    "/:sitecoreRoute*"
+  const languagePatterns = [
+    new RegExp("^[a-z]{2}-[A-Z]{2}$"),
+    new RegExp("^[a-z]{2}$")
   ];
 
   async function getRouteData(route, language) {
@@ -50,40 +57,53 @@
       return path;
     }
 
-    let sitecorePath = router.path;
-    let sitecoreLang = config.defaultLanguage;
+    let paramLang = params.lang || "";
+    let paramPath = params["sitecoreRoute*"] || "/";
 
-    if (!sitecorePath) {
-      sitecorePath = `/${router.params._}`;
+    if (paramLang) {
+      const isLanguage = languagePatterns.find(pattern => {
+        return pattern.test(paramLang);
+      });
+
+      if (!isLanguage) {
+        paramLang = null;
+        paramPath = `${paramLang}/${paramPath}`;
+      }
     }
 
-    sitecoreRoutePatterns.forEach((sitecoreRoute) => {
-      const regexpRoute = pathToRegexp(sitecoreRoute);
-      const testResponse = regexpRoute.exec(sitecorePath);
-      
-      if (testResponse && testResponse.length === 3) {
-        sitecoreLang = testResponse[1];
-        sitecorePath = `/${testResponse[2]}`;
-      }
-    })
-
     return {
-      path: sitecorePath,
-      lang: sitecoreLang
+      path: paramPath,
+      lang: paramLang ? paramLang : config.defaultLanguage
     };
   }
+
+  const ensureDictionaryLoaded = lang => {
+    const ctx = getInternationalizationContext();
+
+    if (!ctx || ctx.lang !== lang) {
+      return i18nInit(lang);
+    }
+
+    return Promise.resolve();
+  };
 
   const sitecoreRouteData = getSitecorePathData();
   const sitecoreLang = sitecoreRouteData.lang;
   const sitecoreRoutePath = sitecoreRouteData.path;
 
   if (!routeData) {
-    getRouteData(sitecoreRoutePath, sitecoreLang)
-      .then(data => routeData = data);
-  }
+    ensureDictionaryLoaded(sitecoreLang)
+      .then(json => dictionary = json);
 
+    getRouteData(sitecoreRoutePath, sitecoreLang)
+      .then(json => routeData = json);
+  }
 </script>
 
-{#if routeData}
-  <RouteHandler routeData={routeData} />
+{#if dictionary}
+  <Dictionary {dictionary}>
+  {#if routeData}
+    <RouteHandler {routeData} />
+  {/if}
+  </Dictionary>
 {/if}

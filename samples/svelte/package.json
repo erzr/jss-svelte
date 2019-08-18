@@ -68,6 +68,6 @@
     "path-to-regexp": "^3.0.0",
     "serialize-javascript": "^1.7.0",
     "svelte-apollo": "^0.3.0",
-    "svero": "^1.0.0"
+    "svelte-routing": "^1.3.0"
   }
 }

@@ -4,14 +4,6 @@
   import App from "./App.svelte";
 
   export let graphQLClient = null;
-
-  let dictionary = null;
-
-  i18nInit().then(json => {
-    dictionary = json;
-  });
 </script>
 
-{#if dictionary}
-  <App {graphQLClient} {dictionary} />
-{/if}
+<App graphQLClient={graphQLClient} />
