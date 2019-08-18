@@ -91,19 +91,22 @@
   const sitecoreLang = sitecoreRouteData.lang;
   const sitecoreRoutePath = sitecoreRouteData.path;
 
-  if (!routeData) {
+  if (!dictionary) {
     ensureDictionaryLoaded(sitecoreLang)
-      .then(json => dictionary = json);
-
-    getRouteData(sitecoreRoutePath, sitecoreLang)
-      .then(json => routeData = json);
+      .then(json => (dictionary = json));
+  }
+  
+  if (!routeData) {
+    getRouteData(sitecoreRoutePath, sitecoreLang).then(
+      json => (routeData = json)
+    );
   }
 </script>
 
 {#if dictionary}
   <Dictionary {dictionary}>
-  {#if routeData}
-    <RouteHandler {routeData} />
-  {/if}
+    {#if routeData}
+      <RouteHandler {routeData} />
+    {/if}
   </Dictionary>
 {/if}
