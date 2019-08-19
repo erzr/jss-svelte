@@ -22,11 +22,6 @@
   export let params = null;
   export let dictionary = null;
 
-  const languagePatterns = [
-    new RegExp("^[a-z]{2}-[A-Z]{2}$"),
-    new RegExp("^[a-z]{2}$")
-  ];
-
   async function getRouteData(route, language) {
     const fetchOptions = {
       layoutServiceConfig: { host: config.sitecoreApiHost },
@@ -57,23 +52,12 @@
       return path;
     }
 
-    let paramLang = params.lang || "";
-    let paramPath = params["sitecoreRoute*"] || "/";
-
-    if (paramLang) {
-      const isLanguage = languagePatterns.find(pattern => {
-        return pattern.test(paramLang);
-      });
-
-      if (!isLanguage) {
-        paramLang = null;
-        paramPath = `${paramLang}/${paramPath}`;
-      }
-    }
+    let paramLang = params.lang || config.defaultLanguage;
+    let paramPath = params["sitecoreRoute"] || "/";
 
     return {
       path: paramPath,
-      lang: paramLang ? paramLang : config.defaultLanguage
+      lang: paramLang
     };
   }
 

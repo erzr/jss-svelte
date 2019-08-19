@@ -4,10 +4,6 @@
 
   const ctx = getInternationalizationContext();
   const t = ctx.getTranslator();
-
-  const buildNavItemProps = () => {
-    return {class: 'p-2 text-dark'};
-  }
 </script>
 
 <div
@@ -24,7 +20,7 @@
       rel="noopener noreferrer">
        {t('Documentation')}
     </a>
-    <Link to="/styleguide" getProps={buildNavItemProps} class="p-2 text-dark"> {t('Styleguide')} </Link>
-    <Link to="/graphql" getProps={buildNavItemProps}> {t('GraphQL')} </Link>
+    <Link to="/styleguide" className="p-2 text-dark"> {t('Styleguide')} </Link>
+    <Link to="/graphql" className="p-2 text-dark"> {t('GraphQL')} </Link>
   </nav>
 </div>

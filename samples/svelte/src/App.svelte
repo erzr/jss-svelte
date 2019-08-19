@@ -20,10 +20,9 @@
   setClient(graphQLClient);
 
   export const routePatterns = [
-    "/:lang/:sitecoreRoute*",
-    "/:lang/:sitecoreRoute*",
-    "/:sitecoreRoute*",
-    "/"
+    '/:lang([a-z]{2}-[A-Z]{2})/:sitecoreRoute*',
+    '/:lang([a-z]{2})/:sitecoreRoute*',
+    '/:sitecoreRoute*'
   ];
 
   if (dictionary) {
