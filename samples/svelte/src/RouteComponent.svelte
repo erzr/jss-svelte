@@ -6,9 +6,7 @@
     dataApi
   } from "@sitecore-jss/sitecore-jss";
   import {
-    InternationalizationContext,
-    getInternationalizationContext,
-    setInternationalizationContext
+    getInternationalizationContext
   } from "jss-svelte";
 
   import config from "./temp/config";
