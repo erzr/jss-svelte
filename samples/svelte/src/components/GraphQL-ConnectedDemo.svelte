@@ -1,7 +1,11 @@
 <script>
-  import { Text, Link, getGraphQLContext } from "jss-svelte";
   import { gql } from "apollo-boost";
-  import { getSitecoreContext } from "jss-svelte";
+  import {
+    Text,
+    Link,
+    getGraphQLContext,
+    getSitecoreContext
+  } from "jss-svelte";
 
   export let rendering = null;
 
