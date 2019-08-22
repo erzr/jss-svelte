@@ -15,5 +15,7 @@ export {
     SitecoreContext ,
     setInternationalizationContext,
     getInternationalizationContext,
-    InternationalizationContext
+    InternationalizationContext,
+    getGraphQLContext,
+    setGraphQLContext
 } from './contexts'

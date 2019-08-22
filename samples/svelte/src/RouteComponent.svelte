@@ -19,6 +19,7 @@
   export let router = {};
   export let params = null;
   export let dictionary = null;
+  export let graphQLClient = null;
 
   async function getRouteData(route, language) {
     const fetchOptions = {
@@ -47,7 +48,10 @@
 
   function getSitecorePathData() {
     if (path) {
-      return path;
+      return {
+        lang: config.defaultLanguage,
+        path
+      };
     }
 
     let paramLang = params.lang || config.defaultLanguage;
@@ -66,7 +70,10 @@
       return i18nInit(lang);
     }
 
-    return Promise.resolve();
+    return Promise.resolve({
+      lang,
+      phrases: ctx.dictionary
+    });
   };
 
   const sitecoreRouteData = getSitecorePathData();

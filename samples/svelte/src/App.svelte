@@ -1,13 +1,13 @@
 <script>
   import { Router, Link, Route } from "svelte-routing";
-  import { setClient } from "svelte-apollo";
   import pathToRegexp from "path-to-regexp";
 
   import RouteComponent from "./RouteComponent.svelte";
   import { setSitecoreContext, SitecoreContext } from "jss-svelte";
   import {
     InternationalizationContext,
-    setInternationalizationContext
+    setInternationalizationContext,
+    setGraphQLContext
   } from "jss-svelte";
 
   import componentFactory from "./temp/componentFactory.js";
@@ -17,12 +17,10 @@
   export let graphQLClient = null;
   export let dictionary = null;
 
-  setClient(graphQLClient);
-
   export const routePatterns = [
-    '/:lang([a-z]{2}-[A-Z]{2})/:sitecoreRoute*',
-    '/:lang([a-z]{2})/:sitecoreRoute*',
-    '/:sitecoreRoute*'
+    "/:lang([a-z]{2}-[A-Z]{2})/:sitecoreRoute*",
+    "/:lang([a-z]{2})/:sitecoreRoute*",
+    "/:sitecoreRoute*"
   ];
 
   if (dictionary) {
@@ -30,19 +28,19 @@
     setInternationalizationContext(context);
   }
 
+  if (graphQLClient) {
+    setGraphQLContext(graphQLClient);
+  }
+
   const sitecoreContext = new SitecoreContext();
   sitecoreContext.setComponentFactory(componentFactory);
   setSitecoreContext(sitecoreContext);
 </script>
 
-{#if routeData}
-  <RouteComponent {path} {routeData} />
-{:else}
-  <Router>
-    {#each routePatterns as routePattern}
-      <Route path={routePattern} let:params>
-        <RouteComponent params={params} />
-      </Route>
-    {/each}
-  </Router>
-{/if}
+<Router>
+  {#each routePatterns as routePattern}
+    <Route path={routePattern} let:params>
+      <RouteComponent {params} {path} {routeData} {dictionary} />
+    </Route>
+  {/each}
+</Router>

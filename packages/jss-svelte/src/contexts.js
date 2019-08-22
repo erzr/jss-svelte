@@ -2,6 +2,7 @@ import { getContext, setContext } from "svelte";
 
 export const SITECORE = {};
 export const INTERNATIONALIZATION = {};
+export const GRAPHQL = {};
 
 export class SitecoreContext {
 
@@ -50,4 +51,13 @@ export const getInternationalizationContext = () => {
 
 export const setInternationalizationContext = (ctx) => {
     setContext(INTERNATIONALIZATION, ctx);
+};
+
+export const getGraphQLContext = () => {
+    const ctx = getContext(GRAPHQL);
+    return ctx;
+}
+
+export const setGraphQLContext = (ctx) => {
+    setContext(GRAPHQL, ctx);
 };

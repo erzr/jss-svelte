@@ -1,11 +1,9 @@
 <script>
-  import { Text, Link } from "jss-svelte";
+  import { Text, Link, getGraphQLContext } from "jss-svelte";
   import { gql } from "apollo-boost";
-
-  import { getClient, query } from "svelte-apollo";
+  import { getSitecoreContext } from "jss-svelte";
 
   export let rendering = null;
-  export let sitecoreContext = null;
 
   const CONNECTED_QUERY = gql`
     query ConnectedDemoQuery($datasource: String!, $contextItem: String!) {
@@ -70,9 +68,13 @@
     }
   `;
 
-  const client = getClient();
-  const connectedQuery = query(client, { query: CONNECTED_QUERY,
-    variables: { datasource: rendering.dataSource, contextItem: sitecoreContext.context.itemId } });
+  const ctx = getGraphQLContext();
+  const sitecoreContext = getSitecoreContext();
+
+  const connectedQuery = ctx.runQuery(CONNECTED_QUERY, {
+    datasource: rendering.dataSource,
+    contextItem: sitecoreContext.context.itemId
+  });
 </script>
 
 <div data-e2e-id="graphql-connected">
@@ -88,7 +90,7 @@
     is set to not use the cache. Consult the Apollo documentation for details.
   </p>
 
-  {#await $connectedQuery}
+  {#await connectedQuery}
     <p class="alert alert-info">GraphQL query is executing...</p>
   {:then result}
 
@@ -117,7 +119,6 @@
           <li>field type: {result.data.datasource.sample2.definition.type}</li>
           <li>
             field is shared?: {result.data.datasource.sample2.definition.shared.toString()}
-
           </li>
         </ul>
       </div>

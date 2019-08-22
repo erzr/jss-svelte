@@ -1,8 +1,9 @@
 <script>
-  import { Placeholder } from "jss-svelte";
+  import { Placeholder, getSitecoreContext } from "jss-svelte";
 
   export let rendering = null;
-  export let sitecoreContext = null;
+  
+  const sitecoreContext = getSitecoreContext();
 
   const disconnectedMode =
     sitecoreContext.context.itemId === "available-in-connected-mode";

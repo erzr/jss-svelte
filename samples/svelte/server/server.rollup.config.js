@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
+import json from 'rollup-plugin-json';
 import copy from 'rollup-plugin-copy'
 const path = require('path');
 
@@ -41,7 +42,8 @@ export default {
 		// some cases you'll need additional configuration —
 		// consult the documentation for details:
 		// https://github.com/rollup/rollup-plugin-commonjs
-		resolve({browser: true}),
+		json(),
+		resolve({browser: false}),
 		commonjs(),
 		replace({
       		'process.env.NODE_ENV': JSON.stringify('development'),
