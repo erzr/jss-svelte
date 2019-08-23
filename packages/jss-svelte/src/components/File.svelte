@@ -8,7 +8,7 @@
 
   let hasFile = false;
   let linkText = null;
-  let anchorAttrs = null;
+  let href = null;
 
   if (!isNotConfiguredProperly) {
     const file = dynamicField.src ? field : dynamicField.value;
@@ -16,15 +16,13 @@
     if (file) {
       hasFile = true;
       linkText = file.title || file.displayName;
-      anchorAttrs = {
-        href: file.src
-      };
+      href = file.src;
     }
   }
 </script>
 
 {#if hasFile}
-  <a {...anchorAttrs}>
+  <a href={href}>
     <slot> {linkText} </slot>
   </a>
 {/if}
