@@ -1,6 +1,6 @@
 {
   "name": "jss-svelte",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Unofficial Svelte component library for Sitecore Javascript Services.",
   "main": "src/index.js",
   "author": "Adam Lamarre",
