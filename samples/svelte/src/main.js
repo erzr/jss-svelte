@@ -1,8 +1,8 @@
 import App from './App.svelte';
 import config from './temp/config';
-import ApolloClient from 'apollo-boost';  
+import GraphQLWrapper from './GraphQLWrapper';
 
-const graphQLClient = new ApolloClient({ uri: config.graphQLEndpoint });
+const graphQLClient = new GraphQLWrapper(config.graphQLEndpoint);
 
 const app = new App({
 	target: document.getElementById('root'),

@@ -5,13 +5,21 @@
     isExperienceEditorActive,
     dataApi
   } from "@sitecore-jss/sitecore-jss";
+  import {
+    getInternationalizationContext
+  } from "jss-svelte";
 
   import config from "./temp/config";
+  import i18nInit from "./i18n";
   import RouteHandler from "./RouteHandler.svelte";
+  import Dictionary from "./Dictionary.svelte";
 
   export let path = null;
   export let routeData = null;
   export let router = {};
+  export let params = null;
+  export let dictionary = null;
+  export let graphQLClient = null;
 
   async function getRouteData(route, language) {
     const fetchOptions = {
@@ -38,38 +46,56 @@
     });
   }
 
-  function getSitecorePath() {
+  function getSitecorePathData() {
     if (path) {
-      return path;
+      return {
+        lang: config.defaultLanguage,
+        path
+      };
     }
 
-    let sitecorePath = router.params.sitecoreRoute ? router.params.sitecoreRoute : '/';
+    let paramLang = params.lang || config.defaultLanguage;
+    let paramPath = params["sitecoreRoute"] || "/";
 
-    if (router.params.splat) {
-      sitecorePath +=  `/${router.params.splat}`;
+    return {
+      path: paramPath,
+      lang: paramLang
+    };
+  }
+
+  const ensureDictionaryLoaded = lang => {
+    const ctx = getInternationalizationContext();
+
+    if (!ctx || ctx.lang !== lang) {
+      return i18nInit(lang);
     }
 
-    return sitecorePath;
+    return Promise.resolve({
+      lang,
+      phrases: ctx.dictionary
+    });
+  };
+
+  const sitecoreRouteData = getSitecorePathData();
+  const sitecoreLang = sitecoreRouteData.lang;
+  const sitecoreRoutePath = sitecoreRouteData.path;
+
+  if (!dictionary) {
+    ensureDictionaryLoaded(sitecoreLang)
+      .then(json => (dictionary = json));
   }
-
-  let sitecoreLang = router.params && router.params.lang ? router.params.lang : "en"; 
-  let sitecoreRoutePath = getSitecorePath();
-
-  if (!sitecoreRoutePath.startsWith("/")) {
-    sitecoreRoutePath = `/${sitecoreRoutePath}`;
+  
+  if (!routeData) {
+    getRouteData(sitecoreRoutePath, sitecoreLang).then(
+      json => (routeData = json)
+    );
   }
-
-  let promise = routeData ? null : getRouteData(sitecoreRoutePath, sitecoreLang);
 </script>
 
-{#if routeData}
-  <RouteHandler {routeData} />
-{:else}
-  {#await promise}
-    <p>...waiting</p>
-  {:then routeData}
-    <RouteHandler {routeData} />
-  {:catch error}
-    <p style="color: red">{error.message}</p>
-  {/await}
+{#if dictionary}
+  <Dictionary {dictionary}>
+    {#if routeData}
+      <RouteHandler {routeData} />
+    {/if}
+  </Dictionary>
 {/if}

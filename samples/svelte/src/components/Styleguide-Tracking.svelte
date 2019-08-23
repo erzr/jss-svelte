@@ -8,6 +8,8 @@
   export let fields = null;
   export let rendering = null;
 
+  const sitecoreContext = getSitecoreContext();
+
   const specimanProps = {
     fields,
     rendering
@@ -122,7 +124,6 @@
       .then(() => alert("Batch of events pushed"))
       .catch(error => alert(error));
   };
-  const sitecoreContext = getSitecoreContext();
   const disconnectedMode =
     sitecoreContext.context.itemId === "available-in-connected-mode";
 </script>

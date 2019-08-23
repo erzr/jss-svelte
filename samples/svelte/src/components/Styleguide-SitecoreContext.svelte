@@ -1,17 +1,16 @@
 <script>
-  import { getFieldValue } from "jss-svelte";
+  import { getFieldValue, getSitecoreContext } from "jss-svelte";
   import StyleguideSpecimen from "../StyleguideSpecimen.svelte";
-  import { getSitecoreContext } from "jss-svelte";
 
   export let fields = null;
   export let rendering = null;
+
+  const sitecoreContext = getSitecoreContext();
 
   const specimanProps = {
     fields,
     rendering
   };
-
-  const sitecoreContext = getSitecoreContext();
 </script>
 
 <style>

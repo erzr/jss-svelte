@@ -1,12 +1,16 @@
 <script>
-  import { Link } from "svero";
+  import { Link } from "svelte-routing";
+  import { getInternationalizationContext } from 'jss-svelte';
+
+  const ctx = getInternationalizationContext();
+  const t = ctx.getTranslator();
 </script>
 
 <div
   class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3
   bg-white border-bottom">
   <h5 class="my-0 mr-md-auto font-weight-normal">
-    <a class="text-dark active" aria-current="page" href="/">{'Svelte JSS'}</a>
+    <a class="text-dark active" aria-current="page" href="/">{t('Svelte JSS')}</a>
   </h5>
   <nav class="my-2 my-md-0 mr-md-3">
     <a
@@ -14,9 +18,9 @@
       href="https://jss.sitecore.net"
       target="_blank"
       rel="noopener noreferrer">
-       {'Documentation'}
+       {t('Documentation')}
     </a>
-    <Link href="/styleguide" className="p-2 text-dark"> {'Styleguide'} </Link>
-    <Link href="/graphql" className="p-2 text-dark"> {'GraphQL'} </Link>
+    <Link to="/styleguide" className="p-2 text-dark"> {t('Styleguide')} </Link>
+    <Link to="/graphql" className="p-2 text-dark"> {t('GraphQL')} </Link>
   </nav>
 </div>

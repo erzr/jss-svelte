@@ -1,0 +1,23 @@
+{
+  "name": "jss-svelte",
+  "version": "1.0.1",
+  "description": "Unofficial Svelte component library for Sitecore Javascript Services.",
+  "main": "src/index.js",
+  "author": "Adam Lamarre",
+  "license": "ISC",
+  "devDependencies": {
+    "@sitecore-jss/sitecore-jss": ">=11.0.2",
+    "rollup": "^1.19.4",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-svelte": "^5.1.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "svelte": "^3.8.0"
+  },
+  "dependencies": {},
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w"
+  }
+}

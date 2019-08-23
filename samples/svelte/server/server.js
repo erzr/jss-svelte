@@ -3,8 +3,8 @@ import App from '../src/App.svelte';
 import serializeJavascript from 'serialize-javascript';
 import indexTemplate from '../build/index.html';
 import config from '../src/temp/config';
-import ApolloClient from 'apollo-boost';
-import { createHttpLink } from 'apollo-link-http';
+import i18nInit from "../src/i18n";
+import GraphQLWrapper from '../src/GraphQLWrapper';
 
 function assertReplace(string, value, replacement) {
   let success = false;
@@ -30,33 +30,48 @@ function getIndexHtml() {
 export function renderView(callback, path, data, viewBag) {
   const state = parseServerData(data, viewBag);
 
-  const graphQLClient = new ApolloClient({ 
-    link: createHttpLink({
-      uri: config.graphQLEndpoint,
-      credentials: 'include'
-    })
+  const graphQLClient = new GraphQLWrapper(config.graphQLEndpoint, true);
+
+  initializei18n(state).then(dictionary => {
+    let renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
+
+    let queryPromise = null;
+
+    if (graphQLClient.needsToWait()) {
+      queryPromise = graphQLClient.waitForPromises()
+        .then(() => {
+          graphQLClient.cacheOnly = true;
+          renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
+        })
+    } else {
+      queryPromise = Promise.resolve();
+    }
+
+    queryPromise.then(() => {
+      const { html } = renderedApp;
+
+      let indexHtml = getIndexHtml();
+
+      // write the React app
+      indexHtml = assertReplace(
+        indexHtml,
+        '<div id="root"></div>',
+        `<div id="root">${html}</div>`
+      );
+      // write the string version of our state
+      indexHtml = assertReplace(
+        indexHtml,
+        '<script type="application/json" id="__JSS_STATE__">null',
+        `<script type="application/json" id="__JSS_STATE__">${serializeJavascript(state, {
+          isJSON: true,
+        })}`
+      );
+
+      callback(null, { html: indexHtml });
+    });
+
   });
 
-  let { html } = App.render({ path: path, routeData: state, graphQLClient });
-
-  let indexHtml = getIndexHtml();
-
-  // write the React app
-  indexHtml = assertReplace(
-    indexHtml,
-    '<div id="root"></div>',
-    `<div id="root">${html}</div>`
-  );
-  // write the string version of our state
-  indexHtml = assertReplace(
-    indexHtml,
-    '<script type="application/json" id="__JSS_STATE__">null',
-    `<script type="application/json" id="__JSS_STATE__">${serializeJavascript(state, {
-      isJSON: true,
-    })}`
-  );
-
-  callback(null, { html: indexHtml });
 };
 
 function parseServerData(data, viewBag) {
@@ -67,4 +82,11 @@ function parseServerData(data, viewBag) {
     viewBag: parsedViewBag,
     sitecore: parsedData && parsedData.sitecore,
   };
+}
+
+function initializei18n(state) {
+  // don't init i18n for not found routes
+  if (!state || !state.sitecore || !state.sitecore.context) return Promise.resolve();
+
+  return i18nInit(state.sitecore.context.language, state.viewBag.dictionary || {});
 }

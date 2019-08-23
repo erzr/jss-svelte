@@ -4,10 +4,9 @@
 
   export let routeData = null;
 
+  const sitecoreContext = getSitecoreContext();
   const route = routeData.sitecore.route;
   const itemId = routeData.sitecore.route.itemId;
-
-  const sitecoreContext = getSitecoreContext();
 
   sitecoreContext.setSitecoreContext({
     route: route,
@@ -16,4 +15,4 @@
   });
 </script>
 
-<Layout {route} />
+<Layout route={route} sitecoreContext={sitecoreContext} />

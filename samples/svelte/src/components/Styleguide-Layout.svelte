@@ -8,6 +8,7 @@
 
   export let rendering = null;
   export let fields = null;
+  export let sitecoreContext = null;
 
   const sections = getChildPlaceholder(rendering, "jss-styleguide-layout")
     .filter(section => getFieldValue(section, "heading"))
@@ -25,7 +26,7 @@
 
 <div class="row">
   <div class="col-sm-8 col-lg-10">
-    <Placeholder name="jss-styleguide-layout" {rendering} />
+    <Placeholder name="jss-styleguide-layout" {rendering} {sitecoreContext} />
   </div>
   <div class="col-sm-4 col-lg-2 order-sm-first pt-2">
     {#each sections as section}

@@ -1,10 +1,10 @@
-# jss-svelte-sample
+# jss-svelte
 
-A sample application for building Svelte powered Sitecore JavaScript Services (JSS) applications. Read more about this project [here](https://www.adamlamarre.com/svelte-powered-sitecore-jss/).
+A sample application and component library for building Svelte powered Sitecore JavaScript Services (JSS) applications. Read more about this project [here](https://www.adamlamarre.com/svelte-powered-sitecore-jss/).
 
 # Getting Started
-* Install the Sitecore JSS CLI if you don't already have it `npm install -g @sitecore-jss/sitecore-jss-cli`
-* Run `jss create sveltetest svelte --r erzr/jss-svelte-sample`
+* If you haven't, follow the "Getting Started" directions [here](https://jss.sitecore.com/docs).
+* Run `jss create sveltetest svelte --r erzr/jss-svelte`
 * Change into the application directory `cd sveltetest`
 * Start the application: `jss start`
 * Open your browser to http://localhost:3000/
