@@ -4,13 +4,13 @@
   "description": "",
   "main": "src/main.js",
   "config": {
-    "appName": "sveltedev",
+    "appName": "svelte-app",
     "rootPlaceholders": [
       "jss-main"
     ],
-    "sitecoreDistPath": "/dist/sveltedev",
+    "sitecoreDistPath": "/dist/svelte-app",
     "sitecoreConfigPath": "/App_Config/Include/zzz",
-    "graphQLEndpointPath": "/api/sveltedev",
+    "graphQLEndpointPath": "/api/svelte-app",
     "language": "en"
   },
   "scripts": {
