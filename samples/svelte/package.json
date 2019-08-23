@@ -65,6 +65,7 @@
     "cross-fetch": "^3.0.4",
     "es6-promise": "^4.2.8",
     "graphql": "^14.4.2",
+    "jss-svelte": "^1.0.1",
     "node-fetch": "^2.6.0",
     "path-to-regexp": "^3.0.0",
     "serialize-javascript": "^1.7.0",
