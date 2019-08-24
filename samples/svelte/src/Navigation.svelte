@@ -2,15 +2,15 @@
   import { Link } from "svelte-routing";
   import { getInternationalizationContext } from 'jss-svelte';
 
-  const ctx = getInternationalizationContext();
-  const t = ctx.getTranslator();
+  const i18Context = getInternationalizationContext();
+  const t = i18Context.getTranslator();
 </script>
 
 <div
   class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3
   bg-white border-bottom">
   <h5 class="my-0 mr-md-auto font-weight-normal">
-    <a class="text-dark active" aria-current="page" href="/">{t('Svelte JSS')}</a>
+    <Link to="/" className="text-dark active" aria-current="page">{t('Svelte JSS')}</Link>
   </h5>
   <nav class="my-2 my-md-0 mr-md-3">
     <a

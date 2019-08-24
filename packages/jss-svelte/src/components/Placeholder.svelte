@@ -1,34 +1,40 @@
 <script>
   import { getContext } from "svelte";
-  import { getSitecoreContext } from '../contexts';
+  import { getSitecoreContext } from "../contexts";
 
   export let name = "";
   export let rendering = null;
   export let store = null;
 
-  const sitecoreContext = getSitecoreContext();
-  let { componentFactory } = sitecoreContext;
+  let renderingComponents;
 
-  const placeholders = rendering.placeholders;
-  const currentPlaceholder = placeholders[name];
+  const constructPlaceholder = () => {
+    const sitecoreContext = getSitecoreContext();
+    let { componentFactory } = sitecoreContext;
 
-  function getComponentForRendering(renderingDefinition) {
-    let component = componentFactory(renderingDefinition.componentName);
-    return {
-      renderingDefinition,
-      component
-    };
-  }
+    const placeholders = rendering.placeholders;
+    const currentPlaceholder = placeholders[name];
 
-  function getComponentsForRenderingData(placeholderData) {
-    let components = placeholderData.map((rendering, index) => {
-      let component = getComponentForRendering(rendering);
-      return component;
-    });
-    return components;
-  }
+    function getComponentForRendering(renderingDefinition) {
+      let component = componentFactory(renderingDefinition.componentName);
+      return {
+        renderingDefinition,
+        component
+      };
+    }
 
-  const renderingComponents = getComponentsForRenderingData(currentPlaceholder);
+    function getComponentsForRenderingData(placeholderData) {
+      let components = placeholderData.map((rendering, index) => {
+        let component = getComponentForRendering(rendering);
+        return component;
+      });
+      return components;
+    }
+
+    renderingComponents = getComponentsForRenderingData(currentPlaceholder);
+  };
+
+  $: rendering && constructPlaceholder();
 </script>
 
 {#each renderingComponents as renderingComponent}

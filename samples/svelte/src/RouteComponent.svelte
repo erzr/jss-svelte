@@ -5,9 +5,7 @@
     isExperienceEditorActive,
     dataApi
   } from "@sitecore-jss/sitecore-jss";
-  import {
-    getInternationalizationContext
-  } from "jss-svelte";
+  import { getInternationalizationContext } from "jss-svelte";
 
   import config from "./temp/config";
   import i18nInit from "./i18n";
@@ -55,7 +53,7 @@
     }
 
     let paramLang = params.lang || config.defaultLanguage;
-    let paramPath = params["sitecoreRoute"] || "/";
+    let paramPath = params.sitecoreRoute || "/";
 
     return {
       path: paramPath,
@@ -76,20 +74,31 @@
     });
   };
 
-  const sitecoreRouteData = getSitecorePathData();
-  const sitecoreLang = sitecoreRouteData.lang;
-  const sitecoreRoutePath = sitecoreRouteData.path;
+  let previousRoute = null;
+  let previousLang = null;
 
-  if (!dictionary) {
-    ensureDictionaryLoaded(sitecoreLang)
-      .then(json => (dictionary = json));
-  }
-  
-  if (!routeData) {
-    getRouteData(sitecoreRoutePath, sitecoreLang).then(
-      json => (routeData = json)
-    );
-  }
+  const handleRouteChange = () => {
+    const sitecoreRouteData = getSitecorePathData();
+    const sitecoreLang = sitecoreRouteData.lang;
+    const sitecoreRoutePath = sitecoreRouteData.path;
+
+    if (previousRoute === sitecoreRoutePath && previousLang === sitecoreLang) {
+      return;
+    }
+
+    previousRoute = sitecoreLang;
+    previousRoute = sitecoreRoutePath;
+
+    getRouteData(sitecoreRoutePath, sitecoreLang).then(json => {
+      routeData = json;
+    });
+
+    if (!dictionary) {
+      ensureDictionaryLoaded(sitecoreLang).then(json => (dictionary = json));
+    }
+  };
+
+  $: params && handleRouteChange();
 </script>
 
 {#if dictionary}
