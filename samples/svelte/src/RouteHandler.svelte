@@ -4,15 +4,22 @@
 
   export let routeData = null;
 
-  const sitecoreContext = getSitecoreContext();
-  const route = routeData.sitecore.route;
-  const itemId = routeData.sitecore.route.itemId;
+  let sitecoreContext;
+  let route;
 
-  sitecoreContext.setSitecoreContext({
-    route: route,
-    itemId: itemId,
-    ...routeData.sitecore.context
-  });
+  const handleRouteChange = () => {
+    sitecoreContext = getSitecoreContext();
+    route = routeData.sitecore.route;
+    const itemId = routeData.sitecore.route.itemId;
+
+    sitecoreContext.setSitecoreContext({
+      route: route,
+      itemId: itemId,
+      ...routeData.sitecore.context
+    });
+  };
+
+  $: routeData && handleRouteChange();
 </script>
 
-<Layout route={route} sitecoreContext={sitecoreContext} />
+<Layout {route} {sitecoreContext} />
