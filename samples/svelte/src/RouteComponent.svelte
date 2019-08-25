@@ -12,7 +12,7 @@
   import RouteHandler from "./RouteHandler.svelte";
   import Dictionary from "./Dictionary.svelte";
 
-  export let path = null;
+  export let pathOverride = null;
   export let routeData = null;
   export let router = {};
   export let params = null;
@@ -45,10 +45,10 @@
   }
 
   function getSitecorePathData() {
-    if (path) {
+    if (pathOverride) {
       return {
         lang: config.defaultLanguage,
-        path
+        path: pathOverride
       };
     }
 
@@ -62,15 +62,15 @@
   }
 
   const ensureDictionaryLoaded = lang => {
-    const ctx = getInternationalizationContext();
+    const i18Context = getInternationalizationContext();
 
-    if (!ctx || ctx.lang !== lang) {
+    if (!i18Context || i18Context.lang !== lang) {
       return i18nInit(lang);
     }
 
     return Promise.resolve({
       lang,
-      phrases: ctx.dictionary
+      phrases: i18Context.dictionary
     });
   };
 
@@ -89,16 +89,20 @@
     previousRoute = sitecoreLang;
     previousRoute = sitecoreRoutePath;
 
-    getRouteData(sitecoreRoutePath, sitecoreLang).then(json => {
-      routeData = json;
-    });
+    getRouteData(sitecoreRoutePath, sitecoreLang)
+      .then(json => {
+        routeData = json;
+      });
 
     if (!dictionary) {
-      ensureDictionaryLoaded(sitecoreLang).then(json => (dictionary = json));
+      ensureDictionaryLoaded(sitecoreLang)
+        .then(json => (dictionary = json));
     }
   };
 
-  $: params && handleRouteChange();
+  $: {
+    params && handleRouteChange();
+  }
 </script>
 
 {#if dictionary}

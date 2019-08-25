@@ -4,11 +4,10 @@
 
   export let routeData = null;
 
-  let sitecoreContext;
   let route;
 
   const handleRouteChange = () => {
-    sitecoreContext = getSitecoreContext();
+    const sitecoreContext = getSitecoreContext();
     route = routeData.sitecore.route;
     const itemId = routeData.sitecore.route.itemId;
 
@@ -19,7 +18,9 @@
     });
   };
 
-  $: routeData && handleRouteChange();
+  $: {
+    routeData && handleRouteChange();
+  }
 </script>
 
-<Layout {route} {sitecoreContext} />
+<Layout {route} />

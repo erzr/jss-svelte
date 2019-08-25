@@ -6,46 +6,54 @@
   export let rendering = null;
   export let store = null;
 
-  let renderingComponents;
+  let renderingComponents = [];
 
-  const constructPlaceholder = () => {
+  const getComponentForRendering = renderingDefinition => {
     const sitecoreContext = getSitecoreContext();
     let { componentFactory } = sitecoreContext;
+    let component = componentFactory(renderingDefinition.componentName);
+    return {
+      uid: renderingDefinition.uid,
+      renderingDefinition,
+      component
+    };
+  };
+
+  const getComponentsForRenderingData = (placeholderData) => {
+    let components = placeholderData.map((rendering, index) => {
+      let component = getComponentForRendering(rendering);
+      renderingComponents.push(component);
+    });
+  };
+
+  const constructPlaceholder = () => {
+    while(renderingComponents.length > 0) {
+      renderingComponents.pop();
+    }
 
     const placeholders = rendering.placeholders;
     const currentPlaceholder = placeholders[name];
 
-    function getComponentForRendering(renderingDefinition) {
-      let component = componentFactory(renderingDefinition.componentName);
-      return {
-        renderingDefinition,
-        component
-      };
-    }
+    getComponentsForRenderingData(currentPlaceholder);
 
-    function getComponentsForRenderingData(placeholderData) {
-      let components = placeholderData.map((rendering, index) => {
-        let component = getComponentForRendering(rendering);
-        return component;
-      });
-      return components;
-    }
-
-    renderingComponents = getComponentsForRenderingData(currentPlaceholder);
+    return true;
   };
 
-  $: rendering && constructPlaceholder();
+  $: {
+    rendering && constructPlaceholder();
+  }
 </script>
 
-{#each renderingComponents as renderingComponent}
+{#each renderingComponents as renderingComponent, i (renderingComponent.uid)}
   {#if renderingComponent.component}
-  <svelte:component
-    this={renderingComponent.component}
-    fields={renderingComponent.renderingDefinition.fields}
-    rendering={renderingComponent.renderingDefinition}
-    params={renderingComponent.renderingDefinition.params}
-    />
+    <svelte:component
+      this={renderingComponent.component}
+      fields={renderingComponent.renderingDefinition.fields}
+      rendering={renderingComponent.renderingDefinition}
+      params={renderingComponent.renderingDefinition.params} />
   {:else}
-    <code {...renderingComponent.renderingDefinition.attributes}>{@html renderingComponent.renderingDefinition.contents}</code>
+    <code {...renderingComponent.renderingDefinition.attributes}>
+      {@html renderingComponent.renderingDefinition.contents}
+    </code>
   {/if}
 {/each}

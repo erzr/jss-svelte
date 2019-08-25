@@ -3,8 +3,6 @@
   import Navigation from "./Navigation.svelte";
 
   export let route = {};
-  export let sitecoreContext = null;
-  export let dictionary = null;
 </script>
 
 <Navigation />

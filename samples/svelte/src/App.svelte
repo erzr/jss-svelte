@@ -40,7 +40,7 @@
 <Router>
   {#each routePatterns as routePattern}
     <Route path={routePattern} let:params>
-      <RouteComponent {params} {path} {routeData} {dictionary} />
+      <RouteComponent pathOverride={path} {params} {routeData} {dictionary} />
     </Route>
   {/each}
 </Router>
