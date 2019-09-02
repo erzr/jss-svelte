@@ -1,8 +1,8 @@
 <script>
   import { Router, Link, Route } from "svelte-routing";
-  import pathToRegexp from "path-to-regexp";
 
   import RouteComponent from "./RouteComponent.svelte";
+  import NightModeButton from './NightModeButton.svelte';
   import { setSitecoreContext, SitecoreContext } from "jss-svelte";
   import {
     InternationalizationContext,
@@ -44,3 +44,5 @@
     </Route>
   {/each}
 </Router>
+
+<NightModeButton />

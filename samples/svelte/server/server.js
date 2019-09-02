@@ -48,7 +48,7 @@ export function renderView(callback, path, data, viewBag) {
     }
 
     queryPromise.then(() => {
-      const { html } = renderedApp;
+      const { html, head } = renderedApp;
 
       let indexHtml = getIndexHtml();
 
@@ -58,6 +58,13 @@ export function renderView(callback, path, data, viewBag) {
         '<div id="root"></div>',
         `<div id="root">${html}</div>`
       );
+
+      indexHtml = assertReplace(
+        indexHtml,
+        '</head>',
+        `${head}</head>`
+      );
+
       // write the string version of our state
       indexHtml = assertReplace(
         indexHtml,
