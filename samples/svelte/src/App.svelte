@@ -2,7 +2,6 @@
   import { Router, Link, Route } from "svelte-routing";
 
   import RouteComponent from "./RouteComponent.svelte";
-  import NightModeButton from './NightModeButton.svelte';
   import { setSitecoreContext, SitecoreContext } from "jss-svelte";
   import {
     InternationalizationContext,
