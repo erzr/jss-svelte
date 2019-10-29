@@ -6,8 +6,12 @@ import { terser } from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
 import copy from 'rollup-plugin-copy'
 const path = require('path');
+const packageConfig = require('../package.json');
 
 const production = false;
+
+const publicDistTarget = path.resolve(__dirname, `../public${packageConfig.config.sitecoreDistPath}/bundle.js`);
+const buildTarget = path.resolve(__dirname, `../build/`);
 
 export default {
 	input: path.resolve(__dirname, './server.js'),
@@ -20,10 +24,10 @@ export default {
 	plugins: [
 		copy({
 			targets: [
-			  'public/index.html'
+				publicDistTarget
 			],
-			outputFolder: 'build'
-		  }),
+			outputFolder: buildTarget
+		}),
 
 		svelte({
 			// enable run-time checks when not in production
@@ -43,11 +47,12 @@ export default {
 		// consult the documentation for details:
 		// https://github.com/rollup/rollup-plugin-commonjs
 		json(),
-		resolve({browser: false}),
+		resolve({ browser: false }),
 		commonjs(),
 		replace({
-      		'process.env.NODE_ENV': JSON.stringify('development'),
-    	}),
+			'process.env.NODE_ENV': JSON.stringify('development'),
+			'%PUBLIC_URL%': packageConfig.config.sitecoreDistPath
+		}),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify

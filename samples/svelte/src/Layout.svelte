@@ -5,8 +5,10 @@
   export let route = {};
 </script>
 
-<Navigation />
+<div id="JSS_LAYOUT">
+  <Navigation />
 
-<div class="container">
-  <Placeholder name="jss-main" rendering={route} />
+  <div class="container">
+    <Placeholder name="jss-main" rendering={route} />
+  </div>
 </div>

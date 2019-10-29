@@ -1,7 +1,10 @@
+require('cross-fetch/polyfill');
 const proxy = require('http-proxy-middleware');
-var fallback = require('express-history-api-fallback')
 var express = require('express');
 const config = require('./src/temp/config');
+const { renderView } = require('./build/server.bundle');
+
+const static = process.argv.some((arg) => arg === '--static');
 
 var app = express()
 var root = __dirname + '/public'
@@ -25,6 +28,79 @@ if (isDisconnected) {
   app.use(proxy('/layouts', { target: config.sitecoreApiHost }));
 }
 
+const requestData = (url) => {
+  return fetch(url).then(res => res.json());
+}
+
+const getEndpoint = () => {
+  return isDisconnected ? `http://localhost:${process.env.PROXY_PORT || 3042}` : config.sitecoreApiHost;
+}
+
+const requestLayoutServiceData = (route, language) => {
+  const endpoint = getEndpoint();
+  const layoutUrl = `${endpoint}/sitecore/api/layout/render/jss?item=${route}&sc_lang=${language}&sc_apikey=${config.sitecoreApiKey}`;
+  return requestData(layoutUrl);
+};
+
+const requestDictionaryServiceData = (language) => {
+  const endpoint = getEndpoint();
+  const layoutUrl = `${endpoint}/sitecore/api/jss/dictionary/${config.jssAppName}/${language}?sc_apikey=${config.sitecoreApiKey}`;
+  return requestData(layoutUrl);
+};
+
+const renderStatic = (path, layoutServiceData, dictionaryData) => {
+  return new Promise(resolve => {
+    renderView((error, rendered) => {
+      resolve(rendered)
+    }, path, layoutServiceData, { dictionary: dictionaryData });
+  })
+};
+
+const nonStaticCallback = (req, res, next) => {
+  if (!static) {
+    res.sendFile(root + '/index.html')
+  } else {
+    next();
+  }
+}
+
+const retrieveStaticData = (req, res, next) => {
+  if (static) {
+    const language = 'en'; // make this dynamic...
+    const path = req.path;
+
+    const promises = [
+      requestLayoutServiceData(path, language),
+      requestDictionaryServiceData(language)
+    ];
+
+    Promise.all(promises).then(([layoutServiceData, dicationaryData]) => {
+      req.JSS_DATA = {
+        path: path,
+        layout: layoutServiceData,
+        dictionary: dicationaryData
+      };
+      next();
+    });
+
+  } else {
+    next();
+  }
+}
+
+const staticCallback = (req, res) => {
+  const {path, layout, dictionary} = req.JSS_DATA;
+
+  renderStatic(path, layout, dictionary)
+    .then(rendered => {
+      const {html} = rendered;
+      res.set('Content-Type', 'text/html');
+      res.send(new Buffer(html));
+    });
+};
+
+app.get(/^[^\.]*$/, [nonStaticCallback, retrieveStaticData, staticCallback]);
+
 app.use(express.static(root))
-app.use(fallback('index.html', { root: root }))
+
 app.listen(3000);

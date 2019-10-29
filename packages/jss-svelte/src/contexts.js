@@ -33,7 +33,7 @@ export class InternationalizationContext {
 
     constructor(dictionary) {
         this.lang = dictionary.lang;
-        this.dictionary = dictionary.phrases;
+        this.dictionary = dictionary.phrases || {};
     }
 
     getTranslator() {

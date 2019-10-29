@@ -1,5 +1,10 @@
+<script>
+    export let lang = 'en';
+    export let distPath = '';
+</script>
+
 <!doctype html>
-<html>
+<html lang={lang}>
 
 <head>
     <meta charset='utf8'>
@@ -11,8 +16,7 @@
     <link rel='icon' type='image/png' href='favicon.png'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-    <link rel='stylesheet' href='/global.css'>
-    <link rel='stylesheet' href='/bundle.css'>
+    <link rel='stylesheet' href={distPath + '/bundle.css'}>
 </head>
 
 <body>
@@ -22,7 +26,7 @@
     <div id="root"></div>
 
     <script type="application/json" id="__JSS_STATE__">null</script>
-    <script src='/bundle.js'></script>
+    <script src={distPath + '/bundle.js'}></script>
 </body>
 
 </html>

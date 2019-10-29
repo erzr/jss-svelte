@@ -1,7 +1,7 @@
 import 'cross-fetch/polyfill';
 import App from '../src/App.svelte';
 import serializeJavascript from 'serialize-javascript';
-import indexTemplate from '../build/index.html';
+import indexTemplate from '../public/index.html';
 import config from '../src/temp/config';
 import i18nInit from "../src/i18n";
 import GraphQLWrapper from '../src/GraphQLWrapper';

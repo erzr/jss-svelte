@@ -37,12 +37,12 @@
   setSitecoreContext(sitecoreContext);
 </script>
 
-<Router>
-  {#each routePatterns as routePattern}
-    <Route path={routePattern} let:params>
-      <RouteComponent pathOverride={path} {params} {routeData} {dictionary} />
-    </Route>
-  {/each}
-</Router>
-
-<NightModeButton />
+<div id="JSS_APP">
+  <Router>
+    {#each routePatterns as routePattern}
+      <Route path={routePattern} let:params>
+        <RouteComponent pathOverride={path} {params} {routeData} {dictionary} />
+      </Route>
+    {/each}
+  </Router>
+</div>
