@@ -95,7 +95,7 @@ const staticCallback = (req, res) => {
     .then(rendered => {
       const {html} = rendered;
       res.set('Content-Type', 'text/html');
-      res.send(new Buffer(html));
+      res.send(html);
     });
 };
 
