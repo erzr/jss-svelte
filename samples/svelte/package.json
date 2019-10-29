@@ -43,7 +43,6 @@
     "@sitecore-jss/sitecore-jss-cli": "^12.0.0",
     "@sitecore-jss/sitecore-jss-dev-tools": "^12.0.0",
     "@sitecore-jss/sitecore-jss-manifest": "^12.0.0",
-    "axios": "^0.18.1",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
     "express-history-api-fallback": "^2.2.1",
