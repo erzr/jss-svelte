@@ -28,24 +28,25 @@ function getIndexHtml() {
 }
 
 export function renderView(callback, path, data, viewBag) {
-  const state = parseServerData(data, viewBag);
+  try {
+    const state = parseServerData(data, viewBag);
 
-  const graphQLClient = new GraphQLWrapper(config.graphQLEndpoint, true);
+    const graphQLClient = new GraphQLWrapper(config.graphQLEndpoint, true);
 
-  initializei18n(state).then(dictionary => {
-    let renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
+    let renderedApp;
+    let queryPromise = Promise.resolve();
 
-    let queryPromise = null;
+    initializei18n(state).then(dictionary => {
+      renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
 
-    if (graphQLClient.needsToWait()) {
-      queryPromise = graphQLClient.waitForPromises()
-        .then(() => {
-          graphQLClient.cacheOnly = true;
-          renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
-        })
-    } else {
-      queryPromise = Promise.resolve();
-    }
+      if (graphQLClient.needsToWait()) {
+        queryPromise = graphQLClient.waitForPromises()
+          .then(() => {
+            graphQLClient.cacheOnly = true;
+            renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
+          })
+      }
+    }).catch((error) => callback(error, null));
 
     queryPromise.then(() => {
       const { html, head } = renderedApp;
@@ -75,10 +76,11 @@ export function renderView(callback, path, data, viewBag) {
       );
 
       callback(null, { html: indexHtml });
-    });
 
-  });
-
+    }).catch((error) => callback(error, null));
+  } catch (err) {
+    callback(err, null);
+  }
 };
 
 function parseServerData(data, viewBag) {
