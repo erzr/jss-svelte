@@ -34,8 +34,10 @@
     const placeholders = rendering.placeholders;
     const currentPlaceholder = placeholders[name];
 
-    getComponentsForRenderingData(currentPlaceholder);
-
+    if (currentPlaceholder) {
+      getComponentsForRenderingData(currentPlaceholder);
+    }
+    
     return true;
   };
 
