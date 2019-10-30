@@ -9,6 +9,7 @@ export { default as Link } from './components/Link.svelte';
 export { default as Image } from './components/Image.svelte';
 export { default as DateField } from './components/DateField.svelte';
 export { default as File } from './components/File.svelte';
+export { default as VisitorIdentification } from './components/VisitorIdentification.svelte';
 export { 
     setSitecoreContext, 
     getSitecoreContext, 
