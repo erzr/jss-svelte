@@ -11,7 +11,8 @@
     "sitecoreDistPath": "/dist/svelte-app",
     "sitecoreConfigPath": "/App_Config/Include/zzz",
     "graphQLEndpointPath": "/api/svelte-app",
-    "language": "en"
+    "language": "en",
+    "buildArtifactsPath": "./build"
   },
   "scripts": {
     "jss": "jss",
