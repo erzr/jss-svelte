@@ -1,5 +1,5 @@
 <script>
-  import { Placeholder } from "jss-svelte";
+  import { Placeholder, VisitorIdentification } from "jss-svelte";
   import Navigation from "./Navigation.svelte";
 
   export let route = {};
@@ -11,4 +11,6 @@
   <div class="container">
     <Placeholder name="jss-main" rendering={route} />
   </div>
+
+  <VisitorIdentification />
 </div>
