@@ -1,17 +1,29 @@
 <script>
   import { getContext } from "svelte";
   import { getSitecoreContext } from "../contexts";
-  import MissingComponent from './MissingComponent.svelte';
+  import MissingComponent from "./MissingComponent.svelte";
 
   export let name = "";
   export let rendering = null;
   export let store = null;
+  export let componentFactory = null;
+
+  export let missingComponentComponent = null;
+  export let renderEachComponent = null;
+  export let renderEmptyComponent = null;
+
+  if (!componentFactory) {
+    const sitecoreContext = getSitecoreContext();
+    componentFactory = sitecoreContext.componentFactory;
+  }
+
+  if (missingComponentComponent) {
+    missingComponentComponent = MissingComponent;
+  }
 
   let renderingComponents = [];
 
   const getComponentForRendering = renderingDefinition => {
-    const sitecoreContext = getSitecoreContext();
-    let { componentFactory } = sitecoreContext;
     let component = componentFactory(renderingDefinition.componentName);
     return {
       uid: renderingDefinition.uid,
@@ -20,15 +32,16 @@
     };
   };
 
-  const getComponentsForRenderingData = (placeholderData) => {
+  const getComponentsForRenderingData = placeholderData => {
     let components = placeholderData.map((rendering, index) => {
       let component = getComponentForRendering(rendering);
+      component.index = index;
       renderingComponents.push(component);
     });
   };
 
   const constructPlaceholder = () => {
-    while(renderingComponents.length > 0) {
+    while (renderingComponents.length > 0) {
       renderingComponents.pop();
     }
 
@@ -49,16 +62,26 @@
 
 {#each renderingComponents as renderingComponent, i (renderingComponent.uid)}
   {#if renderingComponent.component}
-    <svelte:component
-      this={renderingComponent.component}
-      fields={renderingComponent.renderingDefinition.fields}
-      rendering={renderingComponent.renderingDefinition}
-      params={renderingComponent.renderingDefinition.params} />
+    {#if renderEachComponent}
+      <svelte:component this={renderEachComponent} index={renderingComponent.index}>
+        <svelte:component
+          this={renderingComponent.component}
+          rendering={renderingComponent.renderingDefinition}
+          {...renderingComponent.renderingDefinition} />
+      </svelte:component>
+    {:else}
+      <svelte:component
+        this={renderingComponent.component}
+        rendering={renderingComponent.renderingDefinition}
+        {...renderingComponent.renderingDefinition} />
+    {/if}
   {:else if renderingComponent.renderingDefinition.name === 'code'}
     <code {...renderingComponent.renderingDefinition.attributes}>
       {@html renderingComponent.renderingDefinition.contents}
     </code>
   {:else}
-    <MissingComponent componentName={renderingComponent.renderingDefinition.componentName} />
+    <svelte:component
+      this={missingComponentComponent}
+      componentName={renderingComponent.renderingDefinition.componentName} />
   {/if}
 {/each}
