@@ -1,6 +1,7 @@
 <script>
   import { getContext } from "svelte";
   import { getSitecoreContext } from "../contexts";
+  import MissingComponent from './MissingComponent.svelte';
 
   export let name = "";
   export let rendering = null;
@@ -37,7 +38,7 @@
     if (currentPlaceholder) {
       getComponentsForRenderingData(currentPlaceholder);
     }
-    
+
     return true;
   };
 
@@ -53,9 +54,11 @@
       fields={renderingComponent.renderingDefinition.fields}
       rendering={renderingComponent.renderingDefinition}
       params={renderingComponent.renderingDefinition.params} />
-  {:else}
+  {:else if renderingComponent.renderingDefinition.name === 'code'}
     <code {...renderingComponent.renderingDefinition.attributes}>
       {@html renderingComponent.renderingDefinition.contents}
     </code>
+  {:else}
+    <MissingComponent componentName={renderingComponent.renderingDefinition.componentName} />
   {/if}
 {/each}
