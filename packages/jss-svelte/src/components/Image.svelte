@@ -74,14 +74,16 @@
         editableMarkup = dynamicMedia.editable;
       }
 
-      const {html} = SitecoreImage.render({ imgAttrs });
+      if (typeof SitecoreImage.render !== 'undefined') {
+        const {html} = SitecoreImage.render({ imgAttrs });
 
-      const editableMarkupReplaced = dynamicMedia.editable.replace(
-        foundImg.imgTag,
-        html
-      );
+        const editableMarkupReplaced = dynamicMedia.editable.replace(
+          foundImg.imgTag,
+          html
+        );
 
-      editableMarkup = editableMarkupReplaced;
+        editableMarkup = editableMarkupReplaced;
+      }
     } else {
       const img = dynamicMedia.src ? media : dynamicMedia.value;
       if (img) {

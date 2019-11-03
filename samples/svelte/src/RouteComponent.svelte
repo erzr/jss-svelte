@@ -82,7 +82,15 @@
     const sitecoreLang = sitecoreRouteData.lang;
     const sitecoreRoutePath = sitecoreRouteData.path;
 
-    if (previousRoute === sitecoreRoutePath && previousLang === sitecoreLang) {
+    if (!previousLang) {
+      previousLang = sitecoreLang;
+    }
+
+    if (!previousRoute) {
+      previousRoute = sitecoreRoutePath;
+    }
+
+    if (previousRoute === sitecoreRoutePath && (previousLang === sitecoreLang)) {
       return;
     }
 
