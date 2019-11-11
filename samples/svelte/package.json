@@ -69,7 +69,7 @@
     "cross-fetch": "^3.0.4",
     "es6-promise": "^4.2.8",
     "graphql": "^14.4.2",
-    "jss-svelte": "^1.0.5",
+    "jss-svelte": "^1.0.6",
     "node-fetch": "^2.6.0",
     "serialize-javascript": "^1.7.0",
     "svelte-routing": "git+https://github.com/erzr/svelte-routing.git"
