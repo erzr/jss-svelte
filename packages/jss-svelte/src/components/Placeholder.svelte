@@ -19,7 +19,7 @@
     componentFactory = sitecoreContext.componentFactory;
   }
 
-  if (missingComponentComponent) {
+  if (!missingComponentComponent) {
     missingComponentComponent = MissingComponent;
   }
 
