@@ -19,6 +19,9 @@
   export let dictionary = null;
   export let graphQLClient = null;
 
+  export let previousRoute = null;
+  export let previousLang = null;
+
   async function getRouteData(route, language) {
     const fetchOptions = {
       layoutServiceConfig: { host: config.sitecoreApiHost },
@@ -74,37 +77,52 @@
     });
   };
 
-  let previousRoute = null;
-  let previousLang = null;
+  const shouldIssueRequest = (route, language) => {
+    // if we're changing languages
+    if (previousLang && previousLang !== language) {
+      return true;
+    }
+
+    // first load without SSR
+    if (!routeData && !previousRoute) {
+      return true;
+    }
+
+    // if a link is clicked
+    if (!routeData || (previousRoute && route !== previousRoute)) {
+      return true;
+    }
+  };
 
   const handleRouteChange = () => {
     const sitecoreRouteData = getSitecorePathData();
+
     const sitecoreLang = sitecoreRouteData.lang;
     const sitecoreRoutePath = sitecoreRouteData.path;
-
-    if (!previousLang) {
-      previousLang = sitecoreLang;
-    }
 
     if (!previousRoute) {
       previousRoute = sitecoreRoutePath;
     }
 
-    if (previousRoute === sitecoreRoutePath && (previousLang === sitecoreLang)) {
+    if (!previousLang) {
+      previousLang = sitecoreLang;
+    }
+
+    const issueRequest = shouldIssueRequest(sitecoreRoutePath, sitecoreLang);
+
+    if (!issueRequest) {
       return;
     }
 
-    previousRoute = sitecoreLang;
+    previousLang = sitecoreLang;
     previousRoute = sitecoreRoutePath;
 
-    getRouteData(sitecoreRoutePath, sitecoreLang)
-      .then(json => {
-        routeData = json;
-      });
+    getRouteData(sitecoreRoutePath, sitecoreLang).then(json => {
+      routeData = json;
+    });
 
     if (!dictionary) {
-      ensureDictionaryLoaded(sitecoreLang)
-        .then(json => (dictionary = json));
+      ensureDictionaryLoaded(sitecoreLang).then(json => (dictionary = json));
     }
   };
 
