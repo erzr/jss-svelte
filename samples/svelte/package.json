@@ -71,7 +71,7 @@
     "graphql": "^14.4.2",
     "jss-svelte": "^1.0.6",
     "node-fetch": "^2.6.0",
-    "serialize-javascript": "^1.7.0",
+    "serialize-javascript": "^2.1.1",
     "svelte-routing": "git+https://github.com/erzr/svelte-routing.git"
   }
 }
