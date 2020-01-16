@@ -35,7 +35,10 @@ export default {
 		// consult the documentation for details:
 		// https://github.com/rollup/rollup-plugin-commonjs
 		json(),
-		resolve({browser: true}),
+		resolve({
+			browser: true,
+			dedupe: ['svelte', 'svelte/internal']
+		}),
 		commonjs(),
 		replace({
 			  'process.env.NODE_ENV': JSON.stringify('development'),

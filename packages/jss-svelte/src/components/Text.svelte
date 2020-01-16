@@ -8,8 +8,14 @@
   export let className = '';
 
   const hasField = field && (field.editable || field.value);
-  const output = field.editable && editable ? field.editable : field.value;
-  const setDangerously = (field.editable && editable) || !encode;
+
+  let output;
+  let setDangerously;
+
+  if (hasField) {
+    output = field.editable && editable ? field.editable : field.value;
+    setDangerously = (field.editable && editable) || !encode;
+  }
 
   const tagProps = {
     tag,
