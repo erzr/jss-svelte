@@ -72,13 +72,21 @@
     }
   `;
 
-  const ctx = getGraphQLContext();
+  const graphql = getGraphQLContext();
   const sitecoreContext = getSitecoreContext();
 
-  const connectedQuery = ctx.runQuery(CONNECTED_QUERY, {
+  const queryVariables = {
     datasource: rendering.dataSource,
     contextItem: sitecoreContext.context.itemId
-  });
+  };
+
+  let result;
+  graphql.runQuery(
+    "CONNECTED_QUERY_DEMO",
+    CONNECTED_QUERY,
+    queryVariables,
+    queryResult => (result = queryResult)
+  );
 </script>
 
 <div data-e2e-id="graphql-connected">
@@ -94,10 +102,9 @@
     is set to not use the cache. Consult the Apollo documentation for details.
   </p>
 
-  {#await connectedQuery}
+  {#if !result}
     <p class="alert alert-info">GraphQL query is executing...</p>
-  {:then result}
-
+  {:else}
     {#if result.data.datasource}
       <div>
         <h4>Datasource Item (via Connected GraphQL)</h4>
@@ -148,9 +155,6 @@
         </ul>
       </div>
     {/if}
-
-  {:catch error}
-    <p class="alert alert-danger">GraphQL query error: {error.toString()}</p>
-  {/await}
+  {/if}
 
 </div>

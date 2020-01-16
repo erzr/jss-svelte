@@ -4,34 +4,65 @@ import { BatchHttpLink } from 'apollo-link-batch-http';
 
 export default class GraphQLWrapper {
 
-  constructor(endpoint, cachePromises) {
+  constructor(endpoint, cachePromises, fetch = null, cacheState = null, includeCredentials = true) {
     this.cachePromises = cachePromises;
     this.promises = [];
+    this.cache = cacheState || {};
+
+    const linkOptions = {
+      uri: endpoint
+    }
+
+    if (includeCredentials) {
+      linkOptions['credentials'] = 'include';
+    }
+
+    if (fetch) {
+      linkOptions['fetch'] = fetch;
+    }
 
     this.client = new ApolloClient({
       cache: new InMemoryCache(),
-      link: new BatchHttpLink({ uri: endpoint, credentials: 'include' })
+      link: new BatchHttpLink(linkOptions)
     });
   }
 
-  runQuery(graphQlQuery, variables) {
+  getCache() {
+    return this.cache;
+  }
+
+  readQuery(graphQlQuery, variables) {
+    const query = { query: graphQlQuery, variables };
+    const readQuery = this.client.readQuery(query);
+    return !readQuery ? null : {
+      data: readQuery
+    };
+  }
+
+  runQuery(cacheKey, graphQlQuery, variables, callback) {
     const query = { query: graphQlQuery, variables };
 
-    if (this.cacheOnly) {
-      const readQuery = this.client.readQuery(query);
+    if (this.cache[cacheKey]) {
+      const readQuery = this.cache[cacheKey];
 
       return {
         data: readQuery
       };
     }
 
-    const queryPromise = this.client.query(query);
+    const queryPromise = this.client.query(query)
+      .then(result => {
+        this.cache[cacheKey] = result.data;
+        if (callback) {
+          callback(result);
+        }
+      });
 
     if (this.cachePromises) {
       this.promises.push(queryPromise);
     }
 
-    return queryPromise;
+    callback(null);
   }
 
   needsToWait() {
