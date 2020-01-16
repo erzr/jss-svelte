@@ -2,11 +2,20 @@ require('cross-fetch/polyfill');
 const proxy = require('http-proxy-middleware');
 var express = require('express');
 const config = require('./src/temp/config');
-const { renderView } = require('./build/server.bundle');
 
 const static = process.argv.some((arg) => arg === '--static');
 
-var app = express()
+let renderView = null;
+if (static) {
+  try {
+    renderView = require('./build/server.bundle').renderView;
+  } catch {
+    console.error('Server bundle does not exist...');
+    process.exit(1);
+  }
+}
+
+var app = express();
 var root = __dirname + '/public'
 
 const isDisconnected = /localhost/i.test(config.sitecoreApiHost);
