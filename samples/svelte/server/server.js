@@ -1,89 +1,29 @@
-import 'cross-fetch/polyfill';
 import App from '../src/App.svelte';
+import Index from '../src/Index.svelte';
 import serializeJavascript from 'serialize-javascript';
-import indexTemplate from '../public/index.html';
 import config from '../src/temp/config';
 import i18nInit from "../src/i18n";
 import GraphQLWrapper from '../src/GraphQLWrapper';
 
-function assertReplace(string, value, replacement) {
-  let success = false;
-  const result = string.replace(value, () => {
-    success = true;
-    return replacement;
-  });
+export const serverConfig = config;
 
-  if (!success) {
-    throw new Error(
-      `Unable to match replace token '${value}' in public/index.html template. If the HTML shell for the app is modified, also fix the replaces in server.js. Server-side rendering has failed!`
-    );
-  }
-
-  return result;
-}
-
-function getIndexHtml() {
-  let { html } = indexTemplate.render();
+export function renderIndex(headHtml, appHtml, state, cache) {
+  const serializedState = serializeJavascript(state, { isJSON: true, });
+  const cacheState = serializeJavascript(cache, { isJSON: true, });
+  const { html } = Index.render({ headHtml, appHtml, serializedState, cacheState });
   return html;
 }
 
-export function renderView(callback, path, data, viewBag) {
-  try {
-    const state = parseServerData(data, viewBag);
+export function buildGraphQLClient(fetch = null) {
+  return new GraphQLWrapper(config.graphQLEndpoint, true, fetch);
+}
 
-    const graphQLClient = new GraphQLWrapper(config.graphQLEndpoint, true);
+export function performRenderApp(path, state, graphQLClient, dictionary) {
+  const rendered = App.render({ path: path, routeData: state, graphQLClient, dictionary });
+  return rendered;
+}
 
-    let renderedApp;
-    let queryPromise = Promise.resolve();
-
-    initializei18n(state).then(dictionary => {
-      renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
-
-      if (graphQLClient.needsToWait()) {
-        queryPromise = graphQLClient.waitForPromises()
-          .then(() => {
-            graphQLClient.cacheOnly = true;
-            renderedApp = App.render({ path: path, routeData: state, graphQLClient, dictionary });
-          })
-      }
-    }).catch((error) => callback(error, null));
-
-    queryPromise.then(() => {
-      const { html, head } = renderedApp;
-
-      let indexHtml = getIndexHtml();
-
-      // write the React app
-      indexHtml = assertReplace(
-        indexHtml,
-        '<div id="root"></div>',
-        `<div id="root">${html}</div>`
-      );
-
-      indexHtml = assertReplace(
-        indexHtml,
-        '</head>',
-        `${head}</head>`
-      );
-
-      // write the string version of our state
-      indexHtml = assertReplace(
-        indexHtml,
-        '<script type="application/json" id="__JSS_STATE__">null',
-        `<script type="application/json" id="__JSS_STATE__">${serializeJavascript(state, {
-          isJSON: true,
-        })}`
-      );
-
-      callback(null, { html: indexHtml });
-
-    }).catch((error) => callback(error, null));
-  } catch (err) {
-    callback(err, null);
-  }
-};
-
-function parseServerData(data, viewBag) {
+export function parseServerData(data, viewBag) {
   const parsedData = data instanceof Object ? data : JSON.parse(data);
   const parsedViewBag = viewBag instanceof Object ? viewBag : JSON.parse(viewBag);
 
@@ -93,9 +33,58 @@ function parseServerData(data, viewBag) {
   };
 }
 
-function initializei18n(state) {
+export function renderApp(path, state, graphQLClient) {
+  return new Promise(resolve => {
+    initializei18n(state).then(dictionary => {
+      const firstRender = performRenderApp(path, state, graphQLClient, dictionary);
+
+      if (!graphQLClient.needsToWait()) {
+        resolve(firstRender);
+      } else {
+        graphQLClient.waitForPromises()
+          .then(() => {
+            graphQLClient.cacheOnly = true;
+            const secondRender = performRenderApp(path, state, graphQLClient, dictionary);
+            resolve(secondRender);
+          })
+      }
+    })
+  });
+}
+
+export function injectRenderedApp(renderedApp, state, cache) {
+  const { html, head } = renderedApp;
+  let indexHtml = renderIndex(head, html, state, cache);
+  return indexHtml;
+}
+
+export function initializei18n(state) {
   // don't init i18n for not found routes
   if (!state || !state.sitecore || !state.sitecore.context) return Promise.resolve();
 
   return i18nInit(state.sitecore.context.language, state.viewBag.dictionary || {});
 }
+
+export function renderPage(path, data, viewBag) {
+  const state = parseServerData(data, viewBag);
+
+  const graphQLClient = buildGraphQLClient();
+
+  return renderApp(path, state, graphQLClient).then(renderedApp => {
+    const cache = graphQLClient.getCache();
+    const indexHtml = injectRenderedApp(renderedApp, state, cache);
+    return indexHtml;
+  })
+}
+
+export function renderView(callback, path, data, viewBag) {
+  try {
+    renderPage(path, data, viewBag)
+      .then(indexHtml => {
+        callback(null, { html: indexHtml });
+      })
+      .catch((error) => callback(error, null));
+  } catch (err) {
+    callback(err, null);
+  }
+};

@@ -1,7 +1,6 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
 import copy from 'rollup-plugin-copy'
@@ -9,9 +8,6 @@ const path = require('path');
 const packageConfig = require('../package.json');
 
 const production = false;
-
-const publicDistTarget = path.resolve(__dirname, `../public${packageConfig.config.sitecoreDistPath}/bundle.js`);
-const buildTarget = path.resolve(__dirname, `../build/`);
 
 export default {
 	input: path.resolve(__dirname, './server.js'),
@@ -24,9 +20,9 @@ export default {
 	plugins: [
 		copy({
 			targets: [
-				publicDistTarget
+				{ src: `public${packageConfig.config.sitecoreDistPath}/bundle.js`, dest: 'build/' }
 			],
-			outputFolder: buildTarget
+			verbose: true
 		}),
 
 		svelte({
@@ -52,11 +48,6 @@ export default {
 			dedupe: ['svelte', 'svelte/internal'] 
 		}),
 		commonjs(),
-		replace({
-			'process.env.NODE_ENV': JSON.stringify('development'),
-			'%PUBLIC_URL%': packageConfig.config.sitecoreDistPath
-		}),
-
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
 		production && terser()
