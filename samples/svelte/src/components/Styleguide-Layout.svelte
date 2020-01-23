@@ -7,7 +7,6 @@
   } from "jss-svelte";
 
   export let rendering = null;
-  export let fields = null;
   export let sitecoreContext = null;
 
   const sections = getChildPlaceholder(rendering, "jss-styleguide-layout")

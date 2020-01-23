@@ -8,7 +8,11 @@
 
 <div data-e2e-class="styleguide-layout-tabs-tab">
   {#if displayTitle}
-    <Text tag="h5" field={fields.title} />
+    <h5>
+      <Text field={fields.title} />
+    </h5>
   {/if}
-  <RichText field={fields.content} />
+  <div>
+    <RichText field={fields.content} />
+  </div>
 </div>

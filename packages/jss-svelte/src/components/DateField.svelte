@@ -1,6 +1,4 @@
 <script>
-  import TagWrapper from "./TagWrapper.svelte";
-
   export let field = null;
   export let editable = true;
   export let encode = true;
@@ -26,11 +24,9 @@
 </script>
 
 {#if hasField}
-  <TagWrapper {...tagProps}>
-    {#if renderComponent}
-      <svelt:component this={renderComponent} date={new Date(output)} />
-    {:else if setDangerously}
-      {@html output}
-    {:else}{output}{/if}
-  </TagWrapper>
+  {#if renderComponent}
+    <svelt:component this={renderComponent} date={new Date(output)} />
+  {:else if setDangerously}
+    {@html output}
+  {:else}{output}{/if}
 {/if}

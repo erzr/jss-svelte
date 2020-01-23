@@ -7,9 +7,13 @@
   </script>
   
   <div class="pt-3" id={`i${rendering.uid.replace(/[{}]/g, '')}`} data-e2e-id={e2eId}>
+    <h4>
+      <Text field={fields.heading} />
+    </h4>
     
-    <Text tag="h4" field={fields.heading} />
-    <RichText field={fields.description} />
+    <div>
+      <RichText field={fields.description} />
+    </div>
 
     <p>
       <small>

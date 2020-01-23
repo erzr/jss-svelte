@@ -12,7 +12,7 @@
 </script>
 
 <StyleguideSpecimen {...specimanProps} e2eId="styleguide-multilingual">
-  <Text field={fields.sample} encode={false} tag="p" />
+  <p><Text field={fields.sample} encode={false} /></p>
 
   <p>
     <a href="/en/styleguide">Show in English</a>

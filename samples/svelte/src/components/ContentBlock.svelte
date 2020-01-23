@@ -4,6 +4,10 @@
 </script>
 
 <div>
-  <Text tag="h2" className="display-4" field={fields.heading} />
-  <RichText className="contentDescription" field={fields.content} />
+  <h2 class="display-4">
+    <Text field={fields.heading} />
+  </h2>
+  <div class="contentDescription">
+    <RichText field={fields.content} />
+  </div>
 </div>

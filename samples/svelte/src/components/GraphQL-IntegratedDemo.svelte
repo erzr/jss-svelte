@@ -24,7 +24,7 @@
           <br />
           sample1: {datasource.sample1.value}
           <br />
-          sample1 (editable): <Text field={datasource.sample1.jss} />
+          sample1 (editable): <span><Text field={datasource.sample1.jss} /></span>
           <br />
           sample2:<br />
           <ul>

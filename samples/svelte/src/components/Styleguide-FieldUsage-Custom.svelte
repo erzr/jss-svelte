@@ -12,5 +12,5 @@
 </script>
 
 <StyleguideSpecimen {...specimanProps} e2eId="styleguide-fieldusage-custom">
-  <Text field={fields.customIntField} />
+  <span><Text field={fields.customIntField} /></span>
 </StyleguideSpecimen>

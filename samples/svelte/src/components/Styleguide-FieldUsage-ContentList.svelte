@@ -23,7 +23,7 @@
       <div>
         <p>
           Field:
-          <Text field={listItem.fields.textField} />
+          <span><Text field={listItem.fields.textField} /></span>
         </p>
       </div>
     {/each}
@@ -36,7 +36,7 @@
       <div>
         <p>
           Field:
-          <Text field={listItem.fields.textField} />
+          <span><Text field={listItem.fields.textField} /></span>
         </p>
       </div>
     {/each}

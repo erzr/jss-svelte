@@ -36,7 +36,7 @@
           class={`nav-link ${index === activeTabIndex ? 'active' : null}`}
           on:click={() => (activeTabIndex = index)}
           href="#t">
-          <Text field={tab.fields.title} />
+          <span><Text field={tab.fields.title} /></span>
         </a>
       </li>
     {/each}

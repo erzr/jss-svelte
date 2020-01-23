@@ -79,7 +79,7 @@ function scaffoldComponent() {
 
 <div>
   <p>${componentName} Component</p>
-  <Text field={fields.heading} />
+  <span><Text field={fields.heading} /></span>
 </div>
 `;
 

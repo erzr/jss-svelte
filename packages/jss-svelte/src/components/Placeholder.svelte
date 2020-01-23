@@ -5,10 +5,10 @@
 
   export let name = "";
   export let rendering = null;
-  export let store = null;
+  export const store = null;
   export let componentFactory = null;
 
-  export let missingComponentComponent = null;
+  export let missingComponentComponent = MissingComponent;
   export let renderEachComponent = null;
   export let renderEmptyComponent = null;
 
@@ -17,10 +17,6 @@
   if (!componentFactory) {
     const sitecoreContext = getSitecoreContext();
     componentFactory = sitecoreContext.componentFactory;
-  }
-
-  if (!missingComponentComponent) {
-    missingComponentComponent = MissingComponent;
   }
 
   let renderingComponents = [];

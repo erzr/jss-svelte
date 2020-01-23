@@ -1,6 +1,4 @@
 <script>
-  import TagWrapper from './TagWrapper.svelte';
-
   export let field = null;
   export let editable = true;
   export let className = "";
@@ -21,7 +19,5 @@
 </script>
 
 {#if hasField}
-    <TagWrapper {...tagProps}>
-      {@html output}
-    </TagWrapper>
+    {@html output}
 {/if}

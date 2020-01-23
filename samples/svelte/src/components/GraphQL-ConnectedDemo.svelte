@@ -115,7 +115,7 @@
         sample1: {result.data.datasource.sample1.value}
         <br />
         sample1 (editable):
-        <Text field={result.data.datasource.sample1.jss} />
+        <span><Text field={result.data.datasource.sample1.jss} /></span>
         <br />
         sample2:
         <br />
@@ -148,7 +148,7 @@
             <li key={child.id}>
               <a href={child.url}>{child.pageTitle.value}</a>
                 (editable title too!
-              <Text field={child.pageTitle.jss} />
+              <span><Text field={child.pageTitle.jss} /></span>
               )
             </li>
           {/each}

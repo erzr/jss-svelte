@@ -98,5 +98,5 @@
     {@html editableMarkup}
   </span>
 {:else if imageAttrs}
-  <SitecoreImage imgAttrs={imageAttrs} />
+  <SitecoreImage {...imageAttrs} />
 {/if}

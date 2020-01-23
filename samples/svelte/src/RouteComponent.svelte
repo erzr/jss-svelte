@@ -14,10 +14,10 @@
 
   export let pathOverride = null;
   export let routeData = null;
-  export let router = {};
+  export const router = {};
   export let params = null;
   export let dictionary = null;
-  export let graphQLClient = null;
+  export const graphQLClient = null;
 
   export let previousRoute = null;
   export let previousLang = null;

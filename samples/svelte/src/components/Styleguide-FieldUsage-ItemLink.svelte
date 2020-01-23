@@ -20,7 +20,7 @@
     <div>
       <p>
         Field:
-        <Text field={sharedItemLink.fields.textField} />
+        <span><Text field={sharedItemLink.fields.textField} /></span>
       </p>
     </div>
   {/if}
@@ -30,7 +30,7 @@
     <div>
       <p>
         Field:
-        <Text field={localItemLink.fields.textField} />
+        <span><Text field={localItemLink.fields.textField} /></span>
       </p>
     </div>
   {/if}

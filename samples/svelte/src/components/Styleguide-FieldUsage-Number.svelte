@@ -15,7 +15,7 @@
 </script>
 
 <StyleguideSpecimen {...specimanProps} e2eId="styleguide-fieldusage-number">
-  <Text field={fields.sample} />
+  <span><Text field={fields.sample} /></span>
 
   <p>
     JS value type: {typeofFieldValue}

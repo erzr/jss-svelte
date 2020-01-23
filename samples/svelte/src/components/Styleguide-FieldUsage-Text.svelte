@@ -7,14 +7,16 @@
 </script>
 
 <StyleguideSpecimen {fields} {rendering} e2eId="styleguide-fieldusage-text">
-  <Text field={fields.sample} />
+  <span><Text field={fields.sample} /></span>
 
-  <Text
-    field={fields.sample2}
-    tag="section"
-    editable={false}
-    encode={false}
-    className="font-weight-bold" />
+  <span>
+    <Text
+      field={fields.sample2}
+      tag="section"
+      editable={false}
+      encode={false}
+      className="font-weight-bold" />
+  </span>
 
   <div>Raw value (not editable): {getFieldValue(fields, 'sample')}</div>
 </StyleguideSpecimen>
