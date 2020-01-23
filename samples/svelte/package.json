@@ -33,7 +33,8 @@
     "build:client": "cross-env-shell  \"rollup -c\"",
     "build:server": "cross-env-shell NODE_ENV=production \"rollup --config server/server.rollup.config.js\"",
     "scaffold": "node scripts/scaffold-component.js",
-    "build:index": "cross-env-shell \"rollup --config index.rollup.config.js\" && node src/temp/generate-index.bundle.js"
+    "build:index": "cross-env-shell \"rollup --config index.rollup.config.js\" && node src/temp/generate-index.bundle.js",
+    "graphql:update": "node ./scripts/update-graphql-fragment-data.js"
   },
   "author": "",
   "license": "ISC",

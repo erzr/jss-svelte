@@ -1,6 +1,8 @@
 import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { BatchHttpLink } from 'apollo-link-batch-http';
+
+import introspectionQueryResultData from './temp/GraphQLFragmentTypes.json';
 
 export default class GraphQLWrapper {
 
@@ -22,7 +24,11 @@ export default class GraphQLWrapper {
     }
 
     this.client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({
+        fragmentMatcher: new IntrospectionFragmentMatcher({
+          introspectionQueryResultData,
+        }),
+      }),
       link: new BatchHttpLink(linkOptions)
     });
   }
@@ -61,8 +67,6 @@ export default class GraphQLWrapper {
     if (this.cachePromises) {
       this.promises.push(queryPromise);
     }
-
-    callback(null);
   }
 
   needsToWait() {
