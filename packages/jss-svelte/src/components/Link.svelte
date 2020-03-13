@@ -14,7 +14,7 @@
         experienceEditorMarkup = !editable ? null : field.editableFirstPart + field.editableLastPart;
         link = field.href ? field : field.value
         rel = field.target === '_blank' && !field.rel ? null : 'noopener noreferrer';
-        linkText = link.text || link.href;
+        linkText = link.text;
     }
 </script>
 
@@ -26,7 +26,8 @@
     {/if}
 
     <a href={link.href} class={link.class} title={link.title} target={link.target} rel={rel}>
-        {linkText}
-        <slot></slot>
+        <slot>
+          {linkText}
+        </slot>
     </a>
 {/if}
