@@ -25,7 +25,7 @@
         </span>
     {/if}
 
-    <a href={link.href} class={link.class} title={link.class} target={link.target} rel={rel}>
+    <a href={link.href} class={link.class} title={link.title} target={link.target} rel={rel}>
         {linkText}
         <slot></slot>
     </a>
