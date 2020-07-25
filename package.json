@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "A sample application and component library for building Svelte powered Sitecore JavaScript Services (JSS) applications. Read more about this project [here](https://www.adamlamarre.com/svelte-powered-sitecore-jss/).",
   "main": "index.js",
-  "dependencies": {
+  "devDependencies": {
     "lerna": "^3.20.2"
   },
-  "devDependencies": {},
   "scripts": {
     "bootstrap": "lerna bootstrap"
   },
