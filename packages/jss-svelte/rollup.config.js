@@ -3,10 +3,11 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
+import autoPreprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
 
 const production = !process.env.ROLLUP_WATCH;
-
-export default {
+module.exports = {
 	input: 'src/index.js',
 	output: {
 		sourcemap: true,
@@ -17,8 +18,10 @@ export default {
 	plugins: [
 		svelte({
 			dev: !production,
-			generate: 'ssr'
+			generate: 'ssr',
+			preprocess: autoPreprocess()
 		}),
+		typescript({ sourceMap: !production }),
 		resolve({browser: true}),
 		commonjs(),
 		replace({
