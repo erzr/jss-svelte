@@ -5,5 +5,9 @@
     ],
     "exclude": [
         "node_modules/*"
-    ]
+    ],
+    "compilerOptions": {
+        "typeRoots": ["./node_modules/@types"],
+        "types": ["jest"]
+    }
 }

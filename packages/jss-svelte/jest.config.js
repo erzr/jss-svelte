@@ -1,9 +1,10 @@
 const typescript = require('@rollup/plugin-typescript');
 
 module.exports = {
+    preset: 'ts-jest',
     transform: {
         "^.+\\.svelte$": ["svelte-jester", { "preprocess": true }],
-        '^.+\\.js$': 'babel-jest',
+        '^.+\\.ts$': 'babel-jest',
     },
-    moduleFileExtensions: ['js', 'svelte'],
+    moduleFileExtensions: ['js', 'ts', 'svelte'],
 }
