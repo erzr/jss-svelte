@@ -1,102 +1,86 @@
-<script>
+<script type="ts">
   import { mediaApi } from "@sitecore-jss/sitecore-jss";
-  import SitecoreImage from "./SitecoreImage.svelte";
+  import EditableImage from "./EditableImage.svelte";
 
-  export let media = null;
-  export let field = null;
-  export let editable = true;
-  export let imageParams = null;
-  export let srcSet = null;
-  export let className = null;
-  export let sizes = null;
-  export let height = null;
-  export let width = null;
-
-  let editableMarkup = "";
-  let imageAttrs = null;
-
-  const otherProps = {
-    srcSet,
-    class: className,
-    sizes
-  };
-
-  if (height) {
-    otherProps.height = height;
+  interface ImageFieldValue {
+    src?: string;
+    value: ImageFieldValue;
+    /** HTML attributes that will be appended to the rendered <img /> tag. */
+    [attributeName: string]: any;
   }
 
-  if (width) {
-    otherProps.width = width;
+  interface ImageField {
+    value?: ImageFieldValue;
+    editable?: string;
   }
 
-  const getImageAttrs = ({ src, srcSet, ...otherAttrs }) => {
-    if (!src) {
-      return null;
+  interface ImageSizeParameters {
+    /** Fixed width of the image */
+    w?: number;
+    /** Fixed height of the image */
+    h?: number;
+    /** Max width of the image */
+    mw?: number;
+    /** Max height of the image */
+    mh?: number;
+    /** Ignore aspect ratio */
+    iar?: 1 | 0;
+    /** Allow stretch */
+    as?: 1 | 0;
+    /** Image scale. Defaults to 1.0 */
+    sc?: number;
+  }
+
+  export let media: ImageFieldValue = null;
+  export let field: ImageField = null;
+  export let srcSet: ImageSizeParameters = null;
+
+  let imageProps = null;
+  let editable = null;
+
+  const getImageProps = (src: string) => {
+    const imageProps = { ...$$props };
+
+    //  There's something wrong with $$restProps, delete declared props for now.
+    delete imageProps['media'];
+    delete imageProps['field'];
+    delete imageProps['srcSet'];
+
+    if (srcSet != null) {
+      const resolvedSrc = mediaApi.updateImageUrl(src);
+      imageProps.srcSet = mediaApi.getSrcSet(resolvedSrc, srcSet as any);
     }
 
-    const newAttrs = {
-      ...otherAttrs
+    return imageProps;
+  };
+
+  const processProps = (fieldValue: ImageFieldValue) => {
+    const baseProps = getImageProps(fieldValue.src);
+    const resolvedProps = {
+      ...baseProps,
+      ...fieldValue,
     };
-
-    const resolvedSrc = mediaApi.updateImageUrl(src, imageParams);
-    if (srcSet) {
-      newAttrs.srcSet = mediaApi.getSrcSet(resolvedSrc, srcSet, imageParams);
-    } else {
-      newAttrs.src = resolvedSrc;
-    }
-    return newAttrs;
+    return resolvedProps;
   };
 
-  if (field && !media) {
-    media = field;
-  }
-
-  const dynamicMedia = media;
-
-  const isNotConfiguredProperly = !media ||
-    (!dynamicMedia.editable && !dynamicMedia.value && !dynamicMedia.src);
-
-  if (!isNotConfiguredProperly) {
-    if (editable && dynamicMedia.editable) {
-      const foundImg = mediaApi.findEditorImageTag(dynamicMedia.editable);
-      if (!foundImg) {
-        editableMarkup = dynamicMedia.editable;
-      }
-
-      const foundImgProps = foundImg.attrs;
-      // Note: otherProps may override values from foundImgProps, e.g. `style`, `className` prop
-      // We do not attempt to merge.
-      const imgAttrs = getImageAttrs(
-        { ...foundImgProps, ...otherProps },
-        imageParams
-      );
-      if (!imgAttrs) {
-        editableMarkup = dynamicMedia.editable;
-      }
-
-      if (typeof SitecoreImage.render !== 'undefined') {
-        const {html} = SitecoreImage.render({ imgAttrs });
-
-        const editableMarkupReplaced = dynamicMedia.editable.replace(
-          foundImg.imgTag,
-          html
-        );
-
-        editableMarkup = editableMarkupReplaced;
-      }
+  if (media) {
+    if (media.value) {
+      imageProps = processProps(media.value);
     } else {
-      const img = dynamicMedia.src ? media : dynamicMedia.value;
-      if (img) {
-        imageAttrs = getImageAttrs({ ...img, ...otherProps }, imageParams);
-      }
+      imageProps = processProps(media);
+    }
+  } else if (field) {
+    if (field.editable) {
+      editable = field.editable;
+    } else if (field.value) {
+      imageProps = processProps(field.value);
     }
   }
 </script>
 
-{#if editableMarkup}
-  <span class="sc-image-wrapper">
-    {@html editableMarkup}
-  </span>
-{:else if imageAttrs}
-  <SitecoreImage {...imageAttrs} />
+{#if editable}
+  <EditableImage {editable} />
+{:else}
+  <!-- svelte-ignore a11y-missing-attribute -->
+  <img {...imageProps} />
 {/if}

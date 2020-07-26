@@ -1,10 +1,23 @@
-<script>
-  export let field = null;
+<script type="ts">
+  import type { Field } from "@sitecore-jss/sitecore-jss";
+
+  interface FileFieldValue {
+    src?: string;
+    title?: string;
+    displayName?: string;
+    [propName: string]: any;
+  }
+
+  interface FileField {
+    value: FileFieldValue;
+  }
+
+  export let field: FileFieldValue | FileField = null;
 
   const linkProps = { ...$$props };
-  delete linkProps['field'];
+  delete linkProps["field"];
 
-  const dynamicField = field;
+  const dynamicField: any = field;
 
   const isNotConfiguredProperly =
     !field || (!dynamicField.value && !dynamicField.src);
@@ -25,7 +38,7 @@
 </script>
 
 {#if hasFile}
-  <a href={href} {...linkProps}>
-    <slot> {linkText} </slot>
+  <a {href} {...linkProps}>
+    <slot>{linkText}</slot>
   </a>
 {/if}

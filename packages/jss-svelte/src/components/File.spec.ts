@@ -44,7 +44,6 @@ describe('<File />', () => {
             },
         };
         const { container } = render(File, { field: field, id: 'my-file', 'class': 'my-css' });
-        console.log(container.innerHTML);
         expect(container.innerHTML).toContain('id="my-file"');
         expect(container.innerHTML).toContain('class="my-css"');
     });
