@@ -1,33 +1,74 @@
-<script>
-    export let field = null;
-    export let editable = true;
+<script type="ts">
+  interface LinkFieldValue {
+    href?: string;
+    className?: string;
+    title?: string;
+    target?: string;
+    text?: string;
+    [attributeName: string]: any;
+  }
 
-    const missingField = !field || (!field.editableFirstPart && !field.value && !field.href);
+  interface LinkField {
+    value: LinkFieldValue;
+    editableFirstPart?: string;
+    editableLastPart?: string;
+  }
 
-    let experienceEditorMarkup = null;
-    let link = null;
-    let rel = null;
-    let linkText = null;
+  export let field: LinkField = null;
+  export let link: LinkFieldValue = null;
+  export let editable = true;
 
-    if (!missingField)
-    {
-        experienceEditorMarkup = !editable ? null : field.editableFirstPart + field.editableLastPart;
-        link = field.href ? field : field.value
-        rel = field.target === '_blank' && !field.rel ? null : 'noopener noreferrer';
-        linkText = link.text;
-    }
+  const processProps = (field: LinkFieldValue) => {
+    const linkProps = { 
+        ...$$props,
+        ...field
+    };
+
+    delete linkProps['field'];
+    delete linkProps['link'];
+    delete linkProps['editable'];
+
+    return linkProps;
+  };
+
+  const processLink = (field: LinkFieldValue) => {
+    const props = processProps(field);
+    return {
+      text: field.text,
+      props,
+    };
+  };
+
+  const processEditable = (firstPart: string, lastPart: string): string => {
+    return firstPart + lastPart;
+  };
+
+  let linkProps;
+  let linkText;
+  let eeMarkup;
+
+  let linkField: LinkFieldValue = null;
+
+  if (field && field.value) {
+    linkField = field.value;
+  } else if (link) {
+    linkField = link;
+  }
+
+  if (editable && field && field.editableFirstPart) {
+    eeMarkup = processEditable(field.editableFirstPart, field.editableLastPart);
+  } else if (linkField) {
+    const { text, props } = processLink(linkField);
+    linkProps = props;
+    linkText = text;
+  }
 </script>
 
-{#if !missingField}
-    {#if experienceEditorMarkup}
-        <span class="sc-link-wrapper" key="editable">
-            {@html experienceEditorMarkup}
-        </span>
-    {/if}
-
-    <a href={link.href} class={link.class} title={link.title} target={link.target} rel={rel}>
-        <slot>
-          {linkText}
-        </slot>
-    </a>
+{#if linkProps}
+  <!-- svelte-ignore a11y-missing-attribute -->
+  <a {...linkProps}>{linkText}</a>
+{:else if editable && eeMarkup}
+  <span class="sc-link-wrapper">
+    {@html eeMarkup}
+  </span>
 {/if}

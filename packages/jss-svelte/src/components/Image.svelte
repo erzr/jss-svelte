@@ -80,7 +80,7 @@
 
 {#if editable}
   <EditableImage {editable} />
-{:else}
+{:else if imageProps}
   <!-- svelte-ignore a11y-missing-attribute -->
   <img {...imageProps} />
 {/if}
