@@ -1,6 +1,9 @@
 <script>
   export let field = null;
 
+  const linkProps = { ...$$props };
+  delete linkProps['field'];
+
   const dynamicField = field;
 
   const isNotConfiguredProperly =
@@ -22,7 +25,7 @@
 </script>
 
 {#if hasFile}
-  <a href={href}>
+  <a href={href} {...linkProps}>
     <slot> {linkText} </slot>
   </a>
 {/if}

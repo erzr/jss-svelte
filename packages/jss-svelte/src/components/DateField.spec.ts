@@ -1,5 +1,5 @@
 import DateField from './DateField.svelte';
-import { render, fireEvent } from '@testing-library/svelte'
+import { render } from '@testing-library/svelte'
 
 describe('<DateField />', () => {
     it('should return null if no editable or value', async () => {
