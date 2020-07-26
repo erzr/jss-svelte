@@ -1,8 +1,6 @@
 <script>
   export let field = null;
   export let editable = true;
-  export let className = "";
-  export let tag = "div";
 
   const hasField = field && (field.editable || field.value);
 
@@ -13,11 +11,13 @@
   }
 
   const tagProps = {
-    tag,
-    className
+    ...$$props
   };
+
+  delete tagProps['field'];
+  delete tagProps['editable'];
 </script>
 
 {#if hasField}
-    {@html output}
+    <div {...tagProps}>{@html output}</div>
 {/if}
