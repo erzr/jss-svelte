@@ -4,6 +4,8 @@ import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
 import copy from 'rollup-plugin-copy'
+import autoPreprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
 const path = require('path');
 const packageConfig = require('../package.json');
 
@@ -26,30 +28,20 @@ export default {
 		}),
 
 		svelte({
-			// enable run-time checks when not in production
 			dev: !production,
-
 			generate: 'ssr',
-			// we'll extract any component CSS out into
-			// a separate file — better for performance
 			css: css => {
 				css.write('build/bundle.css');
-			}
+			},
+			preprocess: autoPreprocess()
 		}),
-
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration —
-		// consult the documentation for details:
-		// https://github.com/rollup/rollup-plugin-commonjs
+		typescript({ sourceMap: !production }),
 		json(),
 		resolve({ 
 			browser: false,
 			dedupe: ['svelte', 'svelte/internal'] 
 		}),
 		commonjs(),
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
 		production && terser()
 	]
 };

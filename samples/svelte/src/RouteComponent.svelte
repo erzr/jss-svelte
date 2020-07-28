@@ -1,28 +1,28 @@
-<script>
+<script type="ts">
   import { onMount, getContext, setContext } from "svelte";
-  import { dataFetcher } from "./dataFetcher";
+  import dataFetcher from "./dataFetcher";
   import {
     isExperienceEditorActive,
-    dataApi
+    dataApi,
+    LayoutServiceData
   } from "@sitecore-jss/sitecore-jss";
   import { getInternationalizationContext } from "jss-svelte";
-
-  import config from "./temp/config";
   import i18nInit from "./i18n";
   import RouteHandler from "./RouteHandler.svelte";
   import Dictionary from "./Dictionary.svelte";
+  import config from "./temp/config";
 
-  export let pathOverride = null;
-  export let routeData = null;
+  export let pathOverride: string = null;
+  export let routeData: LayoutServiceData = null;
   export const router = {};
   export let params = null;
   export let dictionary = null;
   export const graphQLClient = null;
 
-  export let previousRoute = null;
-  export let previousLang = null;
+  export let previousRoute: string = null;
+  export let previousLang: string = null;
 
-  async function getRouteData(route, language) {
+  async function getRouteData(route, language): Promise<LayoutServiceData> {
     const fetchOptions = {
       layoutServiceConfig: { host: config.sitecoreApiHost },
       querystringParams: {
@@ -47,7 +47,7 @@
     });
   }
 
-  function getSitecorePathData() {
+  function getSitecorePathData(): {lang: string, path: string} {
     if (pathOverride) {
       return {
         lang: config.defaultLanguage,
@@ -55,8 +55,8 @@
       };
     }
 
-    let paramLang = params.lang || config.defaultLanguage;
-    let paramPath = params.sitecoreRoute || "/";
+    let paramLang: string = params.lang || config.defaultLanguage;
+    let paramPath: string = params.sitecoreRoute || "/";
 
     return {
       path: paramPath,
@@ -77,7 +77,7 @@
     });
   };
 
-  const shouldIssueRequest = (route, language) => {
+  const shouldIssueRequest = (route: string, language: string): boolean => {
     // if we're changing languages
     if (previousLang && previousLang !== language) {
       return true;

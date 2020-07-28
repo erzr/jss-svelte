@@ -1,41 +1,60 @@
-<script>
+<script type="ts">
   import { getContext } from "svelte";
   import { getSitecoreContext } from "../contexts";
+  import { getComponentFactory } from "../contexts";
   import MissingComponent from "./MissingComponent.svelte";
+  import type {RouteData, ComponentRendering, HtmlElementRendering} from '@sitecore-jss/sitecore-jss';
 
   export let name = "";
-  export let rendering = null;
-  export const store = null;
+  export let rendering: RouteData;
   export let componentFactory = null;
 
   export let missingComponentComponent = MissingComponent;
   export let renderEachComponent = null;
   export let renderEmptyComponent = null;
 
-  let isEmptyPlaceholder = false;
+  let isEmptyPlaceholder: boolean = false;
 
   if (!componentFactory) {
-    const sitecoreContext = getSitecoreContext();
-    componentFactory = sitecoreContext.componentFactory;
+    componentFactory = getComponentFactory();
   }
 
   let renderingComponents = [];
 
-  const getComponentForRendering = renderingDefinition => {
+  type ResolvedComponent = {
+    uid: string,
+    renderingDefinition: ComponentRendering,
+    component: any,
+    index: number
+  };
+
+  const getComponentForRendering = (renderingDefinition: ComponentRendering, index: number): ResolvedComponent => {
     let component = componentFactory(renderingDefinition.componentName);
     return {
       uid: renderingDefinition.uid,
       renderingDefinition,
-      component
+      component,
+      index
     };
   };
 
-  const getComponentsForRenderingData = placeholderData => {
-    return placeholderData.map((rendering, index) => {
-      let component = getComponentForRendering(rendering);
-      component.index = index;
-      return component;
+  const getComponentsForRenderingData = (placeholderData: (ComponentRendering | HtmlElementRendering)[]): ResolvedComponent[] => {
+    const components: ResolvedComponent[] = [];
+
+    placeholderData.forEach((rendering, index) => {
+      const renderingAny: any = rendering;
+      if (!renderingAny.componentName && renderingAny.name) {
+        console.log('HTML Renderings are not supported at this time.');
+      } else {
+        const component: ResolvedComponent = getComponentForRendering(renderingAny, index);
+
+        if (component) {
+          components.push(component);
+        }
+      }
     });
+
+    return components;
   };
 
   const constructPlaceholder = () => {
@@ -46,7 +65,7 @@
     const placeholders = rendering.placeholders;
     const currentPlaceholder = placeholders[name];
 
-    let resolvedComponents = [];
+    let resolvedComponents: ResolvedComponent[];
 
     if (currentPlaceholder) {
       resolvedComponents = getComponentsForRenderingData(currentPlaceholder);

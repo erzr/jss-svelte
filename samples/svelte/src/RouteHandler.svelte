@@ -1,21 +1,12 @@
-<script>
+<script type="ts">
   import Layout from "./Layout.svelte";
-  import { getSitecoreContext } from "jss-svelte";
+  import { setSitecoreContext } from "jss-svelte";
+  import type { LayoutServiceData } from "@sitecore-jss/sitecore-jss";
 
-  export let routeData = null;
-
-  let route;
+  export let routeData: LayoutServiceData = null;
 
   const handleRouteChange = () => {
-    const sitecoreContext = getSitecoreContext();
-    route = routeData.sitecore.route;
-    const itemId = routeData.sitecore.route.itemId;
-
-    sitecoreContext.setSitecoreContext({
-      route: route,
-      itemId: itemId,
-      ...routeData.sitecore.context
-    });
+    setSitecoreContext(routeData);
   };
 
   $: {
@@ -23,4 +14,4 @@
   }
 </script>
 
-<Layout {route} />
+<Layout route={routeData.sitecore.route} />

@@ -1,6 +1,13 @@
-<script>
+<script type="ts">
+  import type { Field } from "@sitecore-jss/sitecore-jss";
   import { Text, RichText } from "jss-svelte";
-  export let fields = null;
+
+  type ContentBlockFields = {
+    heading: Field<string>;
+    content: Field<string>;
+  };
+
+  export let fields: ContentBlockFields;
 </script>
 
 <div>

@@ -1,5 +1,7 @@
-<script>
-  export let field = null;
+<script type="ts">
+  import type {Field} from '@sitecore-jss/sitecore-jss';
+
+  export let field: Field<string>;
   export let editable = true;
   export let encode = true;
 
@@ -12,7 +14,6 @@
     output = field.editable && editable ? field.editable : field.value;
     setDangerously = (field.editable && editable) || !encode;
   }
-
   
   const tagProps = {
     ...$$props

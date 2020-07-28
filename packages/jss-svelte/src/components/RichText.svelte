@@ -1,5 +1,7 @@
-<script>
-  export let field = null;
+<script type="ts">
+  import type {Field} from '@sitecore-jss/sitecore-jss';
+
+  export let field: Field<string> = null;
   export let editable = true;
 
   const hasField = field && (field.editable || field.value);

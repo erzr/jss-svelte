@@ -1,8 +1,9 @@
-<script>
+<script type="ts">
+  import type {RouteData} from '@sitecore-jss/sitecore-jss';
   import { Placeholder, VisitorIdentification } from "jss-svelte";
   import Navigation from "./Navigation.svelte";
 
-  export let route = {};
+  export let route: RouteData;
 </script>
 
 <div id="JSS_LAYOUT">

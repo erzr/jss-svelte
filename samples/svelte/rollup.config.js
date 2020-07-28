@@ -5,6 +5,8 @@ import replace from 'rollup-plugin-replace';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
+import autoPreprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
 const packageConfig = require('./package.json');
 
 const production = !process.env.ROLLUP_WATCH;
@@ -19,21 +21,14 @@ export default {
 	},
 	plugins: [
 		svelte({
-			// enable run-time checks when not in production
 			dev: !production,
 			hydratable: true,
-			// we'll extract any component CSS out into
-			// a separate file — better for performance
 			css: css => {
 				css.write(`public${packageConfig.config.sitecoreDistPath}/bundle.css`);
-			}
+			},
+			preprocess: autoPreprocess()
 		}),
-
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration —
-		// consult the documentation for details:
-		// https://github.com/rollup/rollup-plugin-commonjs
+		typescript({ sourceMap: !production }),
 		json(),
 		resolve({
 			browser: true,
@@ -44,13 +39,7 @@ export default {
 			  'process.env.NODE_ENV': JSON.stringify('development'),
 			  '%PUBLIC_URL%': packageConfig.config.sitecoreDistPath
     	}),
-
-		// Watch the `public` directory and refresh the
-		// browser on changes when not in production
 		!production && livereload('public'),
-
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
 		production && terser()
 	]
 };

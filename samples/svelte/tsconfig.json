@@ -1,0 +1,13 @@
+{
+    "extends": "@tsconfig/svelte/tsconfig.json",
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules/*"
+    ],
+    "compilerOptions": {
+        "typeRoots": ["./node_modules/@types"],
+        "types": ["node", "@sitecore-jss"]
+    }
+}

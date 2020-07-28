@@ -10,13 +10,13 @@ export { default as Image } from './components/Image.svelte';
 export { default as DateField } from './components/DateField.svelte';
 export { default as File } from './components/File.svelte';
 export { default as VisitorIdentification } from './components/VisitorIdentification.svelte';
-export { 
-    setSitecoreContext, 
-    getSitecoreContext, 
-    SitecoreContext ,
-    setInternationalizationContext,
+export {
+    getComponentFactory,
+    setComponentFactory,
     getInternationalizationContext,
-    InternationalizationContext,
+    setInternationalizationContext,
+    getSitecoreContext,
+    setSitecoreContext,
     getGraphQLContext,
     setGraphQLContext
-} from './contexts'
+} from './contexts';

@@ -42,9 +42,11 @@
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/register": "^7.8.3",
+    "@rollup/plugin-typescript": "^5.0.2",
     "@sitecore-jss/sitecore-jss-cli": "^13.0.0",
     "@sitecore-jss/sitecore-jss-dev-tools": "^13.0.0",
     "@sitecore-jss/sitecore-jss-manifest": "^13.0.0",
+    "@tsconfig/svelte": "^1.0.3",
     "cross-env": "^6.0.3",
     "express-history-api-fallback": "^2.2.1",
     "http-proxy-middleware": "^0.20.0",
@@ -60,7 +62,10 @@
     "rollup-plugin-svelte": "^5.1.1",
     "rollup-plugin-terser": "^5.2.0",
     "svelte": "^3.17.1",
-    "svelte-routing": "git+https://github.com/erzr/svelte-routing.git"
+    "svelte-check": "^0.1.58",
+    "svelte-preprocess": "^4.0.8",
+    "svelte-routing": "git+https://github.com/erzr/svelte-routing.git",
+    "typescript": "^3.9.7"
   },
   "dependencies": {
     "@sitecore-jss/sitecore-jss": "^13.0.0",
